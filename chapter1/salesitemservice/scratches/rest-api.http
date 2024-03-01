@@ -1,0 +1,37 @@
+POST http://localhost:8000/sales-items
+Content-Type: application/json
+
+{
+  "user_account_id": 1,
+  "name": "Sales item",
+  "price": 54
+}
+
+###
+GET http://localhost:8000/sales-items
+Accept: application/json
+
+###
+GET http://localhost:8000/sales-items/1
+Accept: application/json
+
+###
+GET http://localhost:8000/sales-items?userAccountId=1
+Accept: application/json
+
+###
+PUT http://localhost:8000/sales-items/1
+Content-Type: application/json
+
+{
+  "user_account_id": 2,
+  "name": "Sales item modified",
+  "price": 64
+}
+
+###
+DELETE http://localhost:8000/sales-items/1
+Accept: application/json
+
+<> 2024-03-01T200321.404.json
+
