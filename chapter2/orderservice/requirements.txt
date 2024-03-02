@@ -7,6 +7,7 @@ cryptography==42.0.5
 dependency-injector==4.41.0
 fastapi==0.110.0
 Flask==3.0.2
+Flask-Classful==0.16.0
 graphql-core==3.2.3
 h11==0.14.0
 httptools==0.6.1
