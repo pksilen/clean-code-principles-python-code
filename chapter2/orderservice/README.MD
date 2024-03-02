@@ -34,14 +34,33 @@ mysql> exit
 exit
 ```
 
-## Start FastAPI Server
+## Start FastAPI REST Server
+In DiContainer.py, uncomment line:
+`order_controller = providers.Singleton(RestOrderController)`
+and comment out line:
+`# order_controller = providers.Singleton(GraphQlOrderController)`
+
 ```bash
 export DATABASE_URL=mysql+pymysql://root:password@localhost:3306/orderservice
+cd ..
+uvicorn orderservice.app:app
+```
+
+## Start FastAPI GraphQL Server
+In DiContainer.py, uncomment line:
+`order_controller = providers.Singleton(GraphQlOrderController)`
+and comment out line:
+`# order_controller = providers.Singleton(RestOrderController)`
+
+```bash
+export DATABASE_URL=mysql+pymysql://root:password@localhost:3306/orderservice
+cd ..
 uvicorn orderservice.app:app
 ```
 
 ## Start Flask Server
 ```bash
 export DATABASE_URL=mysql+pymysql://root:password@localhost:3306/orderservice
+cd ..
 python -m orderservice.app_flask
 ```
