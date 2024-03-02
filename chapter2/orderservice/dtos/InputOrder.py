@@ -4,8 +4,5 @@ from .OrderItem import OrderItem
 
 
 class InputOrder(BaseModel):
-    userId: str
+    userId: int
     orderItems: list[OrderItem]
-
-    class Config:
-        orm_mode = True

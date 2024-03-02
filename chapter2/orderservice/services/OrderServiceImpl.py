@@ -12,7 +12,7 @@ class OrderServiceImpl(OrderService):
 
     def create_order(self, input_order: InputOrder) -> OutputOrder:
         order = self.__order_repository.save(input_order)
-        return OutputOrder.from_orm(order)
+        return OutputOrder.model_validate(order)
 
     def get_order(self, id_: int) -> OutputOrder:
         order = self.__order_repository.find(id_)

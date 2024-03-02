@@ -4,9 +4,10 @@ from .OrderItem import OrderItem
 
 
 class OutputOrder(BaseModel):
-    id: str
-    userId: str
+    id: int
+    userId: int
     orderItems: list[OrderItem]
 
     class Config:
-        orm_mode = True
+        from_attributes=True
+
