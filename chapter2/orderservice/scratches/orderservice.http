@@ -1,0 +1,17 @@
+POST http://localhost:8000/orders
+Content-Type: application/json
+
+{
+  "userId": "1",
+  "orderItems": [{
+    "id": 1,
+    "salesItemId": "2",
+    "quantity": 2
+  }]
+}
+
+###
+GET http://localhost:8000/orders/1
+Accept: application/json
+
+###
