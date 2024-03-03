@@ -46,7 +46,7 @@ cd ..
 uvicorn orderservice.app:app
 ```
 
-Sample HTTP requests are available in scratches/orderservice.http file.
+Sample HTTP requests are available in scratches/orderservice_rest.http file.
 You can use these requests with the PyCharm Professional's HTTP client.
 
 ## Start FastAPI GraphQL Server
@@ -54,6 +54,9 @@ In DiContainer.py, uncomment line:
 `order_controller = providers.Singleton(GraphQlOrderController)`
 and comment out line:
 `# order_controller = providers.Singleton(RestOrderController)`
+
+Sample HTTP requests are available in scratches/orderservice_graphql.http file.
+You can use these requests with the PyCharm Professional's HTTP client.
 
 ```bash
 export DATABASE_URL=mysql+pymysql://root:password@localhost:3306/orderservice

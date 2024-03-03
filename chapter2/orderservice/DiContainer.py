@@ -19,5 +19,5 @@ class DiContainer(containers.DeclarativeContainer):
 
     order_service = providers.Singleton(OrderServiceImpl)
     order_repository = providers.Singleton(SqlOrderRepository)
-    order_controller = providers.Singleton(RestOrderController)
-    # order_controller = providers.Singleton(GraphQlOrderController)
+    # order_controller = providers.Singleton(RestOrderController)
+    order_controller = providers.Singleton(GraphQlOrderController)

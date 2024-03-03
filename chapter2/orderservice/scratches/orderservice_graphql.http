@@ -1,0 +1,15 @@
+GRAPHQL http://localhost:8000/graphql
+
+query order {
+    order(id: 1) {
+      id
+      userId
+      orderItems {
+        id
+        salesItemId
+        quantity
+      }
+    }
+}
+
+###
