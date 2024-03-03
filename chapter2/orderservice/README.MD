@@ -70,3 +70,6 @@ export DATABASE_URL=mysql+pymysql://root:password@localhost:3306/orderservice
 cd ..
 python -m orderservice.app_flask
 ```
+
+Sample HTTP requests are available in scratches/orderservice_rest.http file.
+You can use these requests with the PyCharm Professional's HTTP client.

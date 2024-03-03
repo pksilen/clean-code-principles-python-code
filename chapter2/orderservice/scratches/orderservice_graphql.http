@@ -13,3 +13,18 @@ query order {
 }
 
 ###
+GRAPHQL http://localhost:8000/graphql
+
+mutation createOrder {
+    createOrder(inputOrder: { userId: 2, orderItems: [{ id: 1, salesItemId: 2, quantity: 100 }]}) {
+      id
+      userId
+      orderItems {
+        id
+        salesItemId
+        quantity
+      }
+    }
+}
+
+###
