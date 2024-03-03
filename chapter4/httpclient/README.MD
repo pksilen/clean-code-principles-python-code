@@ -1,4 +1,4 @@
-# Kafka Client Tests
+# HTTP Client Tests
 
 ## Prerequisites
 
