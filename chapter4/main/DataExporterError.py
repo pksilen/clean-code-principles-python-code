@@ -1,0 +1,2 @@
+class DataExporterError(BaseException):
+    pass
