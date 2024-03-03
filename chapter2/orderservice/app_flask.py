@@ -42,4 +42,4 @@ def handle_unspecified_error(error: Exception):
 FlaskRestOrderController.register(app, route_base='/')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=8000)
