@@ -3,15 +3,22 @@ Content-Type: application/json
 
 {
   "userId": "1",
-  "orderItems": [{
-    "id": 1,
-    "salesItemId": "2",
-    "quantity": 2
-  }]
+  "orderItems": [
+    {
+      "id": "20",
+      "salesItemId": "22",
+      "quantity": 22
+    },
+    {
+      "id": "21",
+      "salesItemId": "33",
+      "quantity": 32
+    }
+  ]
 }
 
 ###
-GET http://localhost:8000/orders/8
+GET http://localhost:8000/orders/7b2794ad-7f0f-4925-bd8e-76920e339e4
 Accept: application/json
 
 ###
