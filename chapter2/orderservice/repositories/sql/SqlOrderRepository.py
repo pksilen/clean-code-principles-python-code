@@ -6,17 +6,17 @@ from sqlalchemy.orm import sessionmaker
 
 from .Base import Base
 from .DbOrder import Order, DbOrder
-from ...errors.DatabaseError import DatabaseError
 from ..OrderRepository import OrderRepository
+from ...errors.DatabaseError import DatabaseError
 
 
 class SqlOrderRepository(OrderRepository):
-    __engine = create_engine(os.environ.get('DATABASE_URL'))
-    __SessionLocal = sessionmaker(
-        autocommit=False, autoflush=False, bind=__engine
-    )
-
     def __init__(self):
+        self.__engine = create_engine(os.environ.get('DATABASE_URL'))
+        self.__SessionLocal = sessionmaker(
+            autocommit=False, autoflush=False, bind=self.__engine
+        )
+
         try:
             Base.metadata.create_all(bind=self.__engine)
         except SQLAlchemyError as error:

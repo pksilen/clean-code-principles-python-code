@@ -5,10 +5,10 @@ from bson.errors import BSONError, InvalidId
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 
-from ...errors.EntityNotFoundError import EntityNotFoundError
-from ...errors.DatabaseError import DatabaseError
 from ..OrderRepository import OrderRepository
 from ...entities.Order import Order
+from ...errors.DatabaseError import DatabaseError
+from ...errors.EntityNotFoundError import EntityNotFoundError
 
 
 class MongoDbOrderRepository(OrderRepository):
@@ -25,29 +25,43 @@ class MongoDbOrderRepository(OrderRepository):
 
     def save(self, order: Order) -> None:
         try:
-            order_dict = order.__dict__
-            order_dict['_id'] = order.id
-            del order_dict['id']
+
+            order_dict = self.__to_dict(order)
             self.__order_coll.insert_one(order_dict)
         except PyMongoError as error:
             raise DatabaseError(error)
 
     def find(self, id_: str) -> Order | None:
         try:
-            sales_item = self.__order_coll.find_one({'_id': id_})
+            order_dict = self.__order_coll.find_one({'_id': id_})
 
             return (
                 None
-                if sales_item is None
-                else self.__create_sales_item_entity(sales_item)
+                if order_dict is None
+                else self.__to_domain_entity(order_dict)
             )
         except InvalidId:
-            raise EntityNotFoundError('Sales item', id_)
+            raise EntityNotFoundError('Order', id_)
         except (BSONError, PyMongoError) as error:
             raise DatabaseError(error)
 
     @staticmethod
-    def __create_sales_item_entity(order_dict: dict[str, Any]):
+    def __to_dict(order: Order) -> dict[str, Any]:
+        return {
+            '_id': order.id,
+            'userId': order.userId,
+            'orderItems': [
+                {
+                    'id': order_item.id,
+                    'salesItemId': order_item.salesItemId,
+                    'quantity': order_item.quantity,
+                }
+                for order_item in order.orderItems
+            ],
+        }
+
+    @staticmethod
+    def __to_domain_entity(order_dict: dict[str, Any]) -> Order:
         id_ = order_dict['_id']
         del order_dict['_id']
         return Order(**(order_dict | {'id': str(id_)}))

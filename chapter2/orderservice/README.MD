@@ -22,7 +22,7 @@ pip install -r requirements.txt
 
 ```bash
 docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -d mysql:latest
-
+docker run --name mongodb -p 27017:27017 -d mongo:latest
 ```
 
 ## Create Database
