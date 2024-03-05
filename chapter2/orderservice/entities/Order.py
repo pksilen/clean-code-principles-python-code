@@ -1,13 +1,31 @@
-from sqlalchemy import BigInteger
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from uuid import uuid4
 
-from .Base import Base
 from .OrderItem import OrderItem
+from ..dtos.InputOrder import InputOrder
 
 
-class Order(Base):
-    __tablename__ = 'orders'
+class Order:
+    def __init__(self, **kwargs):
+        self.__id = str(uuid4())
+        self.__user_id = kwargs['userId']
+        self.__order_items = [
+            OrderItem(**order_item) for order_item in kwargs['orderItems']
+        ]
 
-    id: Mapped[int] = mapped_column(BigInteger(), primary_key=True)
-    userId: Mapped[int] = mapped_column(BigInteger(), index=True)
-    orderItems: Mapped[list[OrderItem]] = relationship(lazy='joined')
+    @staticmethod
+    def create_from(input_order: InputOrder) -> 'Order':
+        return Order(**input_order.dict())
+
+    @property
+    def id(self) -> str:
+        return self.__id
+
+    @property
+    def userId(self) -> str:
+        return self.__user_id
+
+    @property
+    def orderItems(self) -> list[OrderItem]:
+        return self.__order_items
+
+    # Implement business logic here ...

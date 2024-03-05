@@ -8,14 +8,14 @@ class OrderService(Protocol):
     def create_order(self, input_order: InputOrder) -> OutputOrder:
         pass
 
-    def get_order(self, id_: int) -> OutputOrder:
+    def get_order(self, id_: str) -> OutputOrder:
         pass
 
-    def get_order_by_user_id(self, user_id: int) -> OutputOrder:
+    def get_order_by_user_id(self, user_id: str) -> OutputOrder:
         pass
 
-    def update_order(self, id_: int, order_update: InputOrder) -> None:
+    def update_order(self, id_: str, input_order: InputOrder) -> None:
         pass
 
-    def delete_order(self, id_: int) -> None:
+    def delete_order(self, id_: str) -> None:
         pass

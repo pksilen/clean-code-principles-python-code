@@ -1,15 +1,10 @@
-from pydantic import BaseModel, PositiveInt
-
-from ..entities.OrderItem import OrderItem as OrderItemEntity
+from pydantic import BaseModel, PositiveInt, Field
 
 
 class OrderItem(BaseModel):
-    id: int
-    salesItemId: int
+    id: str = Field(max_length=36)
+    salesItemId: str = Field(max_length=36)
     quantity: PositiveInt
 
     class Config:
-        from_attributes=True
-
-    class Meta:
-        orm_model = OrderItemEntity
+        from_attributes = True

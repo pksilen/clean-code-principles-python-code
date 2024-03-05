@@ -4,12 +4,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 
-from ..dtos.InputOrder import InputOrder
-from ..entities.Base import Base
-from ..entities.Order import Order
-from ..errors.DatabaseError import DatabaseError
-from ..repositories.OrderRepository import OrderRepository
-from ..utils import to_entity_dict
+from .Base import Base
+from .DbOrder import Order, DbOrder
+from ...errors.DatabaseError import DatabaseError
+from ..OrderRepository import OrderRepository
 
 
 class SqlOrderRepository(OrderRepository):
@@ -25,21 +23,21 @@ class SqlOrderRepository(OrderRepository):
             # Log error
             raise error
 
-    def save(self, input_order: InputOrder) -> Order:
+    def save(self, db_order: Order) -> None:
         with self.__SessionLocal() as db_session:
             try:
-                order = Order(**to_entity_dict(input_order))
-                db_session.add(order)
+                db_order = DbOrder.create_from(db_order)
+                db_session.add(db_order)
                 db_session.commit()
-                db_session.refresh(order)
-                return order
+                db_session.refresh(db_order)
             except SQLAlchemyError as error:
                 raise DatabaseError(error)
 
-    def find(self, id_: int) -> Order | None:
+    def find(self, id_: str) -> Order | None:
         with self.__SessionLocal() as db_session:
             try:
-                return db_session.get(Order, id_)
+                db_order = db_session.get(DbOrder, id_)
+                return db_order.to_domain_entity() if db_order else None
             except SQLAlchemyError as error:
                 raise DatabaseError(error)
 

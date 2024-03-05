@@ -1,16 +1,22 @@
-from sqlalchemy import BigInteger, ForeignKey, PrimaryKeyConstraint
-from sqlalchemy.orm import Mapped, mapped_column
-
-from .Base import Base
+from uuid import uuid4
 
 
-class OrderItem(Base):
-    __tablename__ = 'orderitems'
-    __table_args__ = (
-        PrimaryKeyConstraint('orderId', 'id', name='orderitems_pk'),
-    )
+class OrderItem:
+    def __init__(self, **kwargs):
+        self.__id = kwargs['id']
+        self.__sales_item_id = kwargs['salesItemId']
+        self.__quantity = kwargs['quantity']
 
-    id: Mapped[int]
-    salesItemId: Mapped[int] = mapped_column(BigInteger())
-    quantity: Mapped[int]
-    orderId: Mapped[int] = mapped_column(ForeignKey('orders.id'))
+    @property
+    def id(self) -> str:
+        return self.__id
+
+    @property
+    def salesItemId(self) -> str:
+        return self.__sales_item_id
+
+    @property
+    def quantity(self) -> int:
+        return self.__quantity
+
+    # Implement business logic here ...

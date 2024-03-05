@@ -15,14 +15,15 @@ class FlaskRestOrderController(FlaskView):
     __order_service: OrderService = Provide['order_service']
 
     @route('/orders', methods=['POST'])
-    def create_order(self) -> Response:
+    def create_order(self) -> tuple[Response, int]:
         output_order = self.__order_service.create_order(
             InputOrder(**request.json)
         )
+
         return jsonify(output_order.dict()), 201
 
     @route('/orders/<id_>')
-    def get_order(self, id_: int) -> Response:
+    def get_order(self, id_: str) -> Response:
         output_order = self.__order_service.get_order(id_)
         return jsonify(output_order.dict())
 

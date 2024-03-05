@@ -37,7 +37,7 @@ class RestOrderController:
     def create_order(self, input_order: InputOrder) -> OutputOrder:
         return self.__order_service.create_order(input_order)
 
-    def get_order(self, id_: int) -> OutputOrder:
+    def get_order(self, id_: str) -> OutputOrder:
         return self.__order_service.get_order(id_)
 
     # Rest of API endpoints...

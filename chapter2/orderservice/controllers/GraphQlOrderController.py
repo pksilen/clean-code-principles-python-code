@@ -18,7 +18,7 @@ class GraphQlOrderController:
     @strawberry.type
     class Query:
         @strawberry.field
-        def order(self, id: int) -> OutputOrder:
+        def order(self, id: str) -> OutputOrder:
             output_order = order_service.get_order(id)
             return OutputOrder.from_pydantic(output_order)
 
@@ -29,6 +29,7 @@ class GraphQlOrderController:
             output_order = order_service.create_order(
                 input_order.to_pydantic()
             )
+
             return OutputOrder.from_pydantic(output_order)
 
     __schema = strawberry.Schema(query=Query, mutation=Mutation)
