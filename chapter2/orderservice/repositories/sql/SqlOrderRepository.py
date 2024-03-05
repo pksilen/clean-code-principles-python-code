@@ -23,10 +23,10 @@ class SqlOrderRepository(OrderRepository):
             # Log error
             raise error
 
-    def save(self, db_order: Order) -> None:
+    def save(self, order: Order) -> None:
         with self.__SessionLocal() as db_session:
             try:
-                db_order = DbOrder.create_from(db_order)
+                db_order = DbOrder.create_from(order)
                 db_session.add(db_order)
                 db_session.commit()
                 db_session.refresh(db_order)
