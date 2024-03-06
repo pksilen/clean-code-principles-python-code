@@ -53,7 +53,7 @@ Sample HTTP requests are available in scratches/orderservice_rest.http and
 scratches/orderservice_graphql.http files.
 You can use these requests with the PyCharm Professional's HTTP client.
 
-## Start Flask Server
+## Start Flask REST Server
 ```bash
 # Choose one of the below commands depending whether you want to use MySQL or MongoDB
 export DATABASE_URL=mongodb://localhost:27017/orderservice
