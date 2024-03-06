@@ -9,7 +9,7 @@ class OrderItem:
         return self.__id
 
     @property
-    def salesItemId(self) -> str:
+    def sales_item_id(self) -> str:
         return self.__sales_item_id
 
     @property

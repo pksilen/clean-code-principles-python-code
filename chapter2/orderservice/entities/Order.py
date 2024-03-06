@@ -22,6 +22,13 @@ class Order:
         # Perform validation of dynamic business rules here
 
     # Domain entity factory method
+    #
+    # You could instantiate different types of domain entities here
+    # Suppose we had a 'type' field in the input order.
+    # Based on that field's value, we could create either
+    # `BusinessOrder` or `ConsumerOrder` domain entity instance.
+    # `BusinessOrder` or `ConsumerOrder` classes could derive from
+    # a common `Order` domain entity class
     @staticmethod
     def create_from(input_order: InputOrder) -> 'Order':
         return Order(**input_order.dict())
@@ -31,11 +38,11 @@ class Order:
         return self.__id
 
     @property
-    def userId(self) -> str:
+    def user_id(self) -> str:
         return self.__user_id
 
     @property
-    def orderItems(self) -> list[OrderItem]:
+    def order_items(self) -> list[OrderItem]:
         return self.__order_items
 
     # Implement business logic here ...

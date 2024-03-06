@@ -7,8 +7,8 @@ from pydantic.main import BaseModel
 from .OrderItem import OrderItem
 
 
-# Output DTOs declare the structure and validations for
-# output to clients
+# Output DTOs declare the structure of client output
+# and related validations.
 # Output DTOs are created based on domain entities
 # Output DTO can, for example, miss some fields that
 # are present in domain entity
