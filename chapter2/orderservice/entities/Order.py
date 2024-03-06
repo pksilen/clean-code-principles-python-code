@@ -6,6 +6,7 @@ from ..dtos.InputOrder import InputOrder
 
 # Domain entity than can contain business logic
 class Order:
+    # Perform validation of dynamic business rules here
     def __init__(self, **kwargs):
         # Generating entity id on server side is good practice
         # for high security and distributed databases
@@ -20,7 +21,6 @@ class Order:
         ]
 
     # Domain entity factory method
-    # Perform validation of dynamic business rules here
     @staticmethod
     def create_from(input_order: InputOrder) -> 'Order':
         return Order(**input_order.dict())
