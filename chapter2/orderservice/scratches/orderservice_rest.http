@@ -2,16 +2,16 @@ POST http://localhost:8000/orders
 Content-Type: application/json
 
 {
-  "userId": "1",
+  "userId": "9853bca0-d917-4218-a165-ae24b7489af0",
   "orderItems": [
     {
-      "id": "20",
-      "salesItemId": "22",
+      "id": "9853bca0-d917-4218-a165-ae24b7489af2",
+      "salesItemId": "9853bca0-d917-4218-a165-ae24b7489af3",
       "quantity": 22
     },
     {
-      "id": "21",
-      "salesItemId": "33",
+      "id": "9853bca0-d917-4218-a165-ae24b7489af4",
+      "salesItemId": "9853bca0-d917-4218-a165-ae24b7489af5",
       "quantity": 32
     }
   ]

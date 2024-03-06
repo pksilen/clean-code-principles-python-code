@@ -16,7 +16,7 @@ query order {
 GRAPHQL http://localhost:8000/graphql
 
 mutation createOrder {
-    createOrder(inputOrder: { userId: "2", orderItems: [{ id: "10", salesItemId: "2", quantity: 100 }]}) {
+    createOrder(inputOrder: { userId: "9853bca0-d917-4218-a165-ae24b7489af1", orderItems: [{ id: "9853bca0-d917-4218-a165-ae24b7489af2", salesItemId: "9853bca0-d917-4218-a165-ae24b7489af3", quantity: 100 }]}) {
       id
       userId
       orderItems {

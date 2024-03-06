@@ -76,7 +76,7 @@ uvicorn orderservice.app:app
 export DATABASE_URL=mongodb://localhost:27017/orderservice
 export DATABASE_URL=mysql+pymysql://root:password@localhost:3306/orderservice
 cd ..
-python -m orderservice.app_flask
+ç
 ```
 
 Sample HTTP requests are available in scratches/orderservice_rest.http file.

@@ -1,6 +1,6 @@
 import strawberry
 
-from ..dtos.OutputOrder import OutputOrder
+from dtos.OutputOrder import OutputOrder
 from .OutputOrderItem import OutputOrderItem
 
 

@@ -1,6 +1,6 @@
 import strawberry
 
-from ..dtos.InputOrder import InputOrder
+from dtos.InputOrder import InputOrder
 from .InputOrderItem import InputOrderItem
 
 
