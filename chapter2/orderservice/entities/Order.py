@@ -4,14 +4,23 @@ from .OrderItem import OrderItem
 from ..dtos.InputOrder import InputOrder
 
 
+# Domain entity than can contain business logic
 class Order:
     def __init__(self, **kwargs):
+        # Generating entity id on server side is good practice
+        # for high security and distributed databases
+        # Having all ids as string allows represents ids
+        # consistently regardless of database engine and programming
+        # languages used
         self.__id = str(uuid4())
+
         self.__user_id = kwargs['userId']
         self.__order_items = [
             OrderItem(**order_item) for order_item in kwargs['orderItems']
         ]
 
+    # Domain entity factory method
+    # Perform validation of dynamic business rules here
     @staticmethod
     def create_from(input_order: InputOrder) -> 'Order':
         return Order(**input_order.dict())

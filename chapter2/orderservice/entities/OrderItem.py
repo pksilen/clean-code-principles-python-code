@@ -1,6 +1,3 @@
-from uuid import uuid4
-
-
 class OrderItem:
     def __init__(self, **kwargs):
         self.__id = kwargs['id']

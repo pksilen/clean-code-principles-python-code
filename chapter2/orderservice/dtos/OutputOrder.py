@@ -7,6 +7,8 @@ from pydantic.main import BaseModel
 from .OrderItem import OrderItem
 
 
+# Output DTOs declare the structure and validations for
+# output to clients
 class OutputOrder(BaseModel):
     id: str = Field(max_length=36)
     userId: str = Field(max_length=36)

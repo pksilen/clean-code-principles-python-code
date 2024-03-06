@@ -45,6 +45,9 @@ class MongoDbOrderRepository(OrderRepository):
         except (BSONError, PyMongoError) as error:
             raise DatabaseError(error)
 
+    # This is a conversion method for converting
+    # a domain entity into a database entity
+    # Those two can have different representations
     @staticmethod
     def __to_dict(order: Order) -> dict[str, Any]:
         return {
@@ -60,6 +63,9 @@ class MongoDbOrderRepository(OrderRepository):
             ],
         }
 
+    # This is a conversion method for converting
+    # a database entity into a domain entity
+    # Those two can have different representations
     @staticmethod
     def __to_domain_entity(order_dict: dict[str, Any]) -> Order:
         id_ = order_dict['_id']
