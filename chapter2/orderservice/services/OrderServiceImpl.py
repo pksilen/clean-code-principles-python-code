@@ -15,6 +15,15 @@ class OrderServiceImpl(OrderService):
         # Input DTO is converted to valid domain entity
         order = Order.create_from(input_order)
 
+        # If your model had additional business logic, you
+        # could perform it here using domain entity and/or
+        # domain service methods
+        # Do not inline all the business logic code here, but
+        # create separate methods either in domain entity or
+        # domain service classes.
+        # This example does not have any additional business
+        # logic
+
         # Domain entity is persisted
         # Repository converts the domain entity into database entity
         self.__order_repository.save(order)
