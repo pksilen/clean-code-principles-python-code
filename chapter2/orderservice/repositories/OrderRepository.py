@@ -9,5 +9,3 @@ class OrderRepository(Protocol):
 
     def find(self, id_: str) -> Order | None:
         pass
-
-    # Rest of methods...

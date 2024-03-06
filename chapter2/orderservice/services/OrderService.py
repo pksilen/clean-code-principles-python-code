@@ -10,12 +10,3 @@ class OrderService(Protocol):
 
     def get_order(self, id_: str) -> OutputOrder:
         pass
-
-    def get_order_by_user_id(self, user_id: str) -> OutputOrder:
-        pass
-
-    def update_order(self, id_: str, input_order: InputOrder) -> None:
-        pass
-
-    def delete_order(self, id_: str) -> None:
-        pass

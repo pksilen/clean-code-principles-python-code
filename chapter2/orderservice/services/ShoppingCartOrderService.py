@@ -1,8 +1,8 @@
 from dependency_injector.wiring import Provide
 
-from ..entities.Order import Order
 from ..dtos.InputOrder import InputOrder
 from ..dtos.OutputOrder import OutputOrder
+from ..entities.Order import Order
 from ..repositories.OrderRepository import OrderRepository
 from ..services.OrderService import OrderService
 from ..services.ShoppingCartService import ShoppingCartService
@@ -19,5 +19,3 @@ class OrderServiceImpl(OrderService):
         self.__shopping_cart_service.empty_cart(order.user_id)
         self.__order_repository.save(order)
         return OutputOrder.model_validate(order)
-
-    # Rest of the methods...

@@ -40,5 +40,3 @@ class SqlOrderRepository(OrderRepository):
                 return db_order.to_domain_entity() if db_order else None
             except SQLAlchemyError as error:
                 raise DatabaseError(error)
-
-    # Rest of methods...

@@ -23,5 +23,3 @@ class OrderServiceImpl(OrderService):
             raise EntityNotFoundError('Order', id_)
 
         return OutputOrder.model_validate(order)
-
-    # Rest of the methods...

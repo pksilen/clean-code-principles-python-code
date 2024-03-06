@@ -31,5 +31,3 @@ class FlaskRestOrderController(FlaskView):
     def get_order(self, id_: str) -> Response:
         output_order = self.__order_service.get_order(id_)
         return jsonify(output_order.dict())
-
-    # Rest of API endpoints...

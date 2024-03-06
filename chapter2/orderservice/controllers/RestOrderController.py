@@ -42,5 +42,3 @@ class RestOrderController:
 
     def get_order(self, id_: str) -> OutputOrder:
         return self.__order_service.get_order(id_)
-
-    # Rest of API endpoints...
