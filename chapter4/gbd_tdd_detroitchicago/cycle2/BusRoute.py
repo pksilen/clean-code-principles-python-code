@@ -1,0 +1,2 @@
+class BusRoute(Protocol):
+    pass
