@@ -15,6 +15,11 @@ order_service: OrderService = Provide['order_service']
 
 
 class GraphQlOrderController:
+    # Controller methods should not contain any business logic
+    # Controller method should delegate to application services (use cases)
+    # Controller can only contain logic related to
+    # serializing/deserializing data to/from client
+
     @strawberry.type
     class Query:
         @strawberry.field

@@ -5,6 +5,7 @@ from flask_classful import FlaskView, route
 from ..dtos.InputOrder import InputOrder
 from ..services.OrderService import OrderService
 
+
 # In the request handler functions of the below class
 # remember to add authorization, necessary audit logging and
 # observability (metric updates) for production.
@@ -14,6 +15,10 @@ from ..services.OrderService import OrderService
 class FlaskRestOrderController(FlaskView):
     __order_service: OrderService = Provide['order_service']
 
+    # Controller methods should not contain any business logic
+    # Controller method should delegate to application services (use cases)
+    # Controller can only contain logic related to
+    # serializing/deserializing data to/from client
     @route('/orders', methods=['POST'])
     def create_order(self) -> tuple[Response, int]:
         output_order = self.__order_service.create_order(

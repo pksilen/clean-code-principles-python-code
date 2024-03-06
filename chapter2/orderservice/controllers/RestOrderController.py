@@ -5,6 +5,7 @@ from ..dtos.InputOrder import InputOrder
 from ..dtos.OutputOrder import OutputOrder
 from ..services.OrderService import OrderService
 
+
 # In the request handler functions of the below class
 # remember to add authorization, necessary audit logging and
 # observability (metric updates) for production.
@@ -34,6 +35,8 @@ class RestOrderController:
     def router(self):
         return self.__router
 
+    # Controller methods should not contain any business logic
+    # Controller method should delegate to application services (use cases)
     def create_order(self, input_order: InputOrder) -> OutputOrder:
         return self.__order_service.create_order(input_order)
 
