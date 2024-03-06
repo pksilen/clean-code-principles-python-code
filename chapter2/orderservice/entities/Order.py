@@ -38,11 +38,11 @@ class Order:
         return self.__id
 
     @property
-    def user_id(self) -> str:
+    def userId(self) -> str:
         return self.__user_id
 
     @property
-    def order_items(self) -> list[OrderItem]:
+    def orderItems(self) -> list[OrderItem]:
         return self.__order_items
 
     # Implement business logic here ...
