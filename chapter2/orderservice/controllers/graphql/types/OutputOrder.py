@@ -1,7 +1,7 @@
 import strawberry
 
-from dtos.OutputOrder import OutputOrder
 from .OutputOrderItem import OutputOrderItem
+from ....dtos.OutputOrder import OutputOrder
 
 
 @strawberry.experimental.pydantic.type(model=OutputOrder)

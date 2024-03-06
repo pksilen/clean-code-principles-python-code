@@ -3,6 +3,7 @@ import os
 from dependency_injector import containers, providers
 
 from .controllers.RestOrderController import RestOrderController
+from .controllers.graphql.GraphQlOrderController import GraphQlOrderController
 from .repositories.mongodb.MongoDbOrderRepository import MongoDbOrderRepository
 from .repositories.sql.SqlOrderRepository import SqlOrderRepository
 from .services.OrderServiceImpl import OrderServiceImpl
@@ -14,7 +15,7 @@ class DiContainer(containers.DeclarativeContainer):
             '.services.OrderServiceImpl',
             '.controllers.RestOrderController',
             '.controllers.FlaskRestOrderController',
-            '.controllers.GraphQlOrderController',
+            '.controllers.graphql.GraphQlOrderController',
             '.repositories.sql.SqlOrderRepository',
         ]
     )
@@ -26,5 +27,7 @@ class DiContainer(containers.DeclarativeContainer):
     else:
         order_repository = providers.Singleton(MongoDbOrderRepository)
 
-    order_controller = providers.Singleton(RestOrderController)
-    # order_controller = providers.Singleton(GraphQlOrderController)
+    if os.environ['CONTROLLER_TYPE'].startswith('rest'):
+        order_controller = providers.Singleton(RestOrderController)
+    else:
+        order_controller = providers.Singleton(GraphQlOrderController)

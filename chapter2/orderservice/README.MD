@@ -35,33 +35,12 @@ mysql> exit
 exit
 ```
 
-## Start FastAPI REST Server
-In `DiContainer.py`, uncomment line:
-`order_controller = providers.Singleton(RestOrderController)`
-and comment out line:
-`# order_controller = providers.Singleton(GraphQlOrderController)`
-
+## Start FastAPI REST or GraphQL Server
 ```bash
-# Choose one of the below commands depending whether you want to use MySQL or MongoDB
-export DATABASE_URL=mongodb://localhost:27017/orderservice
-export DATABASE_URL=mysql+pymysql://root:password@localhost:3306/orderservice
-cd ..
-uvicorn orderservice.app:app
-```
+# Choose one of the below commands depending whether you want to use REST or GraphQL
+export CONTROLLER_TYPE=rest
+export CONTROLLER_TYPE=graphql
 
-Sample HTTP requests are available in scratches/orderservice_rest.http file.
-You can use these requests with the PyCharm Professional's HTTP client.
-
-## Start FastAPI GraphQL Server
-In `DiContainer.py`, uncomment line:
-`order_controller = providers.Singleton(GraphQlOrderController)`
-and comment out line:
-`# order_controller = providers.Singleton(RestOrderController)`
-
-Sample HTTP requests are available in scratches/orderservice_graphql.http file.
-You can use these requests with the PyCharm Professional's HTTP client.
-
-```bash
 # Choose one of the below commands depending whether you want to use MySQL or MongoDB
 export DATABASE_URL=mongodb://localhost:27017/orderservice
 export DATABASE_URL=mysql+pymysql://root:password@localhost:3306/orderservice
@@ -69,14 +48,19 @@ export DATABASE_URL=mysql+pymysql://root:password@localhost:3306/orderservice
 cd ..
 uvicorn orderservice.app:app
 ```
+
+Sample HTTP requests are available in scratches/orderservice_rest.http and 
+scratches/orderservice_graphql.http files.
+You can use these requests with the PyCharm Professional's HTTP client.
 
 ## Start Flask Server
 ```bash
 # Choose one of the below commands depending whether you want to use MySQL or MongoDB
 export DATABASE_URL=mongodb://localhost:27017/orderservice
 export DATABASE_URL=mysql+pymysql://root:password@localhost:3306/orderservice
+
 cd ..
-ç
+python -m orderservice.app_flask
 ```
 
 Sample HTTP requests are available in scratches/orderservice_rest.http file.

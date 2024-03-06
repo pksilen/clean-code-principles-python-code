@@ -2,9 +2,9 @@ import strawberry
 from dependency_injector.wiring import Provide
 from strawberry.fastapi import GraphQLRouter
 
-from controllers.graphql.types.InputOrder import InputOrder
-from controllers.graphql.types.OutputOrder import OutputOrder
-from services.OrderService import OrderService
+from .types.InputOrder import InputOrder
+from .types.OutputOrder import OutputOrder
+from ...services.OrderService import OrderService
 
 order_service: OrderService = Provide['order_service']
 
