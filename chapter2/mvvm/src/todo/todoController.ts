@@ -1,5 +1,5 @@
-import store from "../common/model/store";
-import { AppState } from "../common/model/AppState";
+import store from "../common/model/state/store";
+import { AppState } from "../common/model/state/AppState";
 import ToggleDoneTodoAction from "./model/actions/ToggleDoneTodoAction";
 import StartFetchTodosAction from "./model/actions/StartFetchTodosAction";
 import Controller from "../common/Controller";
