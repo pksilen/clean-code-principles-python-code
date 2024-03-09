@@ -1,3 +1,6 @@
+from BusDriver import BusDriver
+
+
 class GossipingBusDrivers:
     def __init__(self, bus_drivers: list[BusDriver]):
         self.__bus_drivers = bus_drivers.copy()
