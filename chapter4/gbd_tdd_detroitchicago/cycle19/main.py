@@ -1,8 +1,8 @@
 import sys
 
+from BusDriversParserImpl import BusDriversParserImpl
 from GossipingBusDrivers import GossipingBusDrivers
 from MaxDrivenStopCountParserImpl import MaxDrivenStopCountParserImpl
-from BusDriversParserImpl import BusDriversParserImpl
 
 
 class Main:
@@ -11,6 +11,8 @@ class Main:
         max_driven_stop_count = MaxDrivenStopCountParserImpl().parse(
             sys.argv[1]
         )
+
+        print(sys.argv[2:])
 
         bus_drivers = BusDriversParserImpl().parse(sys.argv[2:])
 

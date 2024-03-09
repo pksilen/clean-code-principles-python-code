@@ -26,7 +26,7 @@ Feature: Gossiping bus drivers
 
   Scenario: Bus drivers fail to share all rumors because bus routes never cross
      Given maximum number of bus stops driven is 100
-     Given bus drivers with the following bus routes and rumors
+     Given bus drivers with the following routes and rumors
        | Route                    | Rumors                 |
        | stop-a, stop-b, stop-c   | rumor1, rumor2         |
        | stop-d, stop-e, stop-f   | rumor1, rumor3, rumor4 |
