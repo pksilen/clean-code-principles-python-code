@@ -1,3 +1,9 @@
+from typing import Final
+
+from BusDriver import BusDriver
+from BusStop import BusStop
+
+
 class BusStopImpl(BusStop):
     def __init__(self):
         self.__bus_drivers: Final = set()
@@ -14,3 +20,9 @@ class BusStopImpl(BusStop):
 
     def add(self, bus_driver: BusDriver) -> None:
         self.__bus_drivers.add(bus_driver)
+
+    def remove(self, bus_driver: BusDriver) -> None:
+        self.__bus_drivers.remove(bus_driver)
+
+    def get_bus_driver_count(self) -> int:
+        return len(self.__bus_drivers)
