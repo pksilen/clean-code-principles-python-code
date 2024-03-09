@@ -1,38 +1,32 @@
+import unittest
+
+from BusDriverImpl import BusDriverImpl
+from BusStopImpl import BusStopImpl
+from CircularBusRoute import CircularBusRoute
+from GossipingBusDrivers import GossipingBusDrivers
+from Rumor import Rumor
+
+
 class GossipingBusDriversTests(unittest.TestCase):
     rumor1 = Rumor()
     rumor2 = Rumor()
     all_rumors = {rumor1, rumor2}
 
-    @patch('BusStopImpl.__new__')
-    @patch('BusDriverImpl.__new__')
-    @patch('BusDriverImpl.__new__')
-    def test_drive_until_all_rumors_shared__after_one_stop(
-        self,
-        bus_driver_mock1: Mock,
-        bus_driver_mock2: Mock,
-        bus_stop_mock: Mock,
-    ):
+    def test_drive_until_all_rumors_shared__after_one_stop(self):
         # GIVEN
-        bus_driver_mock1.drive_to_next_bus_stop.return_value = (
-            bus_stop_mock
-        )
+        bus_stop = BusStopImpl()
+        bus_route = CircularBusRoute([bus_stop])
+        bus_driver1 = BusDriverImpl(bus_route, {self.rumor1})
+        bus_driver2 = BusDriverImpl(bus_route, {self.rumor2})
 
-        bus_driver_mock2.drive_to_next_bus_stop.return_value = (
-            bus_stop_mock
-        )
-
-        bus_driver_mock1.get_rumors.return_value = self.all_rumors
-        bus_driver_mock2.get_rumors.return_value = self.all_rumors
-
-        gossiping_bus_drivers = GossipingBusDrivers(
-            [bus_driver_mock1, bus_driver_mock2]
-        )
+        gossiping_bus_drivers = GossipingBusDrivers([bus_driver1, bus_driver2])
 
         # WHEN
         all_rumors_were_shared = (
-            gossiping_bus_drivers.drive_until_all_rumors_shared(100)
+            gossiping_bus_drivers.drive_until_all_rumors_shared()
         )
 
         # THEN
         self.assertTrue(all_rumors_were_shared)
-        bus_stop_mock.share_rumors_with_drivers.assert_called_once()
+        self.assertEqual(bus_driver1.get_rumors(), self.all_rumors)
+        self.assertEqual(bus_driver2.get_rumors(), self.all_rumors)

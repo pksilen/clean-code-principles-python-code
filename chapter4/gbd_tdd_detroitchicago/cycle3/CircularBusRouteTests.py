@@ -1,7 +1,7 @@
 import unittest
 
-from CircularBusRoute import CircularBusRoute
 from BusStopImpl import BusStopImpl
+from CircularBusRoute import CircularBusRoute
 
 
 class CircularBusRouteTests(unittest.TestCase):

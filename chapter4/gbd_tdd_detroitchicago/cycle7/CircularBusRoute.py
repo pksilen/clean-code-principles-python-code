@@ -1,3 +1,9 @@
+from typing import Final
+
+from BusRoute import BusRoute
+from BusStop import BusStop
+
+
 class CircularBusRoute(BusRoute):
     def __init__(self, bus_stops: list[BusStop]):
         if not bus_stops:
@@ -12,8 +18,6 @@ class CircularBusRoute(BusRoute):
         except ValueError:
             raise ValueError('Bus stop does not belong to bus route')
 
-        next_bus_stop_index = (
-            curr_bus_stop_index + 1
-        ) % self.__bus_stop_count
+        next_bus_stop_index = (curr_bus_stop_index + 1) % self.__bus_stop_count
 
         return self.__bus_stops[next_bus_stop_index]

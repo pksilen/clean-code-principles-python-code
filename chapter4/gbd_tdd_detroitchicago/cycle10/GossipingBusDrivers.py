@@ -1,3 +1,7 @@
+from BusDriver import BusDriver
+from Rumor import Rumor
+
+
 class GossipingBusDrivers:
     def __init__(self, bus_drivers: list[BusDriver]):
         self.__bus_drivers = bus_drivers.copy()
@@ -16,7 +20,7 @@ class GossipingBusDrivers:
             if self.__all_rumors_are_shared():
                 return True
 
-    def __get_all_rumors():
+    def __get_all_rumors(self) -> set[Rumor]:
         return {
             rumor
             for bus_driver in self.__bus_drivers

@@ -1,5 +1,10 @@
+from BusDriver import BusDriver
+from BusRoute import BusRoute
+from Rumor import Rumor
+
+
 class BusDriverImpl(BusDriver):
-    def __init__(self, rumors: set[Rumor]):
+    def __init__(self, bus_route: BusRoute, rumors: set[Rumor]):
         self.__rumors = rumors.copy()
 
     def get_rumors(self) -> set[Rumor]:
