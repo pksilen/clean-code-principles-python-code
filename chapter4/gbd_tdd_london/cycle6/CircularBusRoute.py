@@ -1,3 +1,9 @@
+from typing import Final
+
+from BusRoute import BusRoute
+from BusStop import BusStop
+
+
 class CircularBusRoute(BusRoute):
     def __init__(self, bus_stops: list[BusStop]):
         self.__bus_stops: Final = bus_stops.copy()

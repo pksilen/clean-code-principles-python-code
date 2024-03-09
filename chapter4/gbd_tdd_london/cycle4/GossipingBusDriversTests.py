@@ -1,3 +1,10 @@
+import unittest
+from unittest.mock import patch, Mock
+
+from GossipingBusDrivers import GossipingBusDrivers
+from Rumor import Rumor
+
+
 class GossipingBusDriversTests(unittest.TestCase):
     rumor1 = Rumor()
     rumor2 = Rumor()
@@ -13,13 +20,9 @@ class GossipingBusDriversTests(unittest.TestCase):
         bus_stop_mock: Mock,
     ):
         # GIVEN
-        bus_driver_mock1.drive_to_next_bus_stop.return_value = (
-            bus_stop_mock
-        )
+        bus_driver_mock1.drive_to_next_bus_stop.return_value = bus_stop_mock
 
-        bus_driver_mock2.drive_to_next_bus_stop.return_value = (
-            bus_stop_mock
-        )
+        bus_driver_mock2.drive_to_next_bus_stop.return_value = bus_stop_mock
 
         bus_driver_mock1.get_rumors.return_value = self.all_rumors
         bus_driver_mock2.get_rumors.return_value = self.all_rumors
@@ -43,12 +46,12 @@ class GossipingBusDriversTests(unittest.TestCase):
     @patch('BusDriverImpl.__new__')
     @patch('BusDriverImpl.__new__')
     def test_drive_until_all_rumors_shared__after_two_stops(
-            self,
-            bus_driver_mock1: Mock,
-            bus_driver_mock2: Mock,
-            bus_stop_mock1: Mock,
-            bus_stop_mock2: Mock,
-            bus_stop_mock3: Mock,
+        self,
+        bus_driver_mock1: Mock,
+        bus_driver_mock2: Mock,
+        bus_stop_mock1: Mock,
+        bus_stop_mock2: Mock,
+        bus_stop_mock3: Mock,
     ):
         # GIVEN
         bus_stop_mocks = [bus_stop_mock1, bus_stop_mock2, bus_stop_mock3]
@@ -95,22 +98,18 @@ class GossipingBusDriversTests(unittest.TestCase):
     @patch('BusDriverImpl.__new__')
     @patch('BusDriverImpl.__new__')
     def test_drive_until_all_rumors_shared__when_rumors_are_not_shared(
-            self,
-            bus_driver_mock1: Mock,
-            bus_driver_mock2: Mock,
-            bus_stop_mock1: Mock,
-            bus_stop_mock2: Mock,
+        self,
+        bus_driver_mock1: Mock,
+        bus_driver_mock2: Mock,
+        bus_stop_mock1: Mock,
+        bus_stop_mock2: Mock,
     ):
         # GIVEN
         bus_stop_mocks = [bus_stop_mock1, bus_stop_mock2]
 
-        bus_driver_mock1.drive_to_next_bus_stop.return_value = (
-            bus_stop_mock1
-        )
+        bus_driver_mock1.drive_to_next_bus_stop.return_value = bus_stop_mock1
 
-        bus_driver_mock2.drive_to_next_bus_stop.return_value = (
-            bus_stop_mock2
-        )
+        bus_driver_mock2.drive_to_next_bus_stop.return_value = bus_stop_mock2
 
         bus_driver_mock1.get_rumors.return_value = {self.rumor1}
         bus_driver_mock2.get_rumors.return_value = {self.rumor2}
