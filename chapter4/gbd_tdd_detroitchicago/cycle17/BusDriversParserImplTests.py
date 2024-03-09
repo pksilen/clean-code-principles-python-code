@@ -42,6 +42,20 @@ class BusDriversParserImplTests(unittest.TestCase):
         # THEN
         self.__assert_bus_stops_are_same(bus_drivers)
 
+    def test_parse__with_multiple_drivers_and_a_common_rumor(
+        self,
+    ):
+        # GIVEN
+        bus_driver_specs = ['bus-stop-a;rumor1', 'bus-stop-b;rumor1']
+
+        # WHEN
+        bus_drivers = BusDriversParserImpl().parse(bus_driver_specs)
+
+        # THEN
+        self.assertEqual(
+            bus_drivers[0].get_rumors(), bus_drivers[1].get_rumors()
+        )
+
     def __assert_has_circular_bus_route_with_one_stop(
         self, bus_drivers: list[BusDriver]
     ):
