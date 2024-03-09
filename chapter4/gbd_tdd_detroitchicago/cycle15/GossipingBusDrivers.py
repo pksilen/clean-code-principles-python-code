@@ -1,7 +1,13 @@
+from BusDriver import BusDriver
+from Rumor import Rumor
+from BusStop import BusStop
+
+
 class GossipingBusDrivers:
     def __init__(self, bus_drivers: list[BusDriver]):
         self.__bus_drivers = bus_drivers.copy()
         self.__all_rumors = self.__get_all_rumors()
+        self.__driven_stop_count = 0
 
     def drive_until_all_rumors_shared(
         self, max_driven_stop_count: int
@@ -25,7 +31,7 @@ class GossipingBusDrivers:
         for bus_stop in bus_stops:
             bus_stop.share_rumors_with_drivers()
 
-    def __get_all_rumors():
+    def __get_all_rumors(self) -> set[Rumor]:
         return {
             rumor
             for bus_driver in self.__bus_drivers
