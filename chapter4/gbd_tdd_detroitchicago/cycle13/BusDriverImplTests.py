@@ -1,37 +1,35 @@
+import unittest
+
+from BusDriverImpl import BusDriverImpl
+from BusStopImpl import BusStopImpl
+from CircularBusRoute import CircularBusRoute
+from Rumor import Rumor
+
+
 class BusDriverImplTests(unittest.TestCase):
     rumor1 = Rumor()
     rumor2 = Rumor()
 
-    @patch('BusStopImpl.__new__')
-    @patch('BusStopImpl.__new__')
-    @patch('CircularBusRoute.__new__')
     def test_drive_to_next_bus_stop(
-            self,
-            bus_route_mock: Mock,
-            bus_stop_a_mock: Mock,
-            bus_stop_b_mock: Mock,
+        self,
     ):
         # GIVEN
-        bus_route_mock.get_first_bus_stop.return_value = bus_stop_a_mock
-        bus_route_mock.get_next_bus_stop.return_value = bus_stop_b_mock
-        bus_driver = BusDriverImpl(bus_route_mock, set())
+        bus_stop_a = BusStopImpl()
+        bus_stop_b = BusStopImpl()
+        bus_route = CircularBusRoute([bus_stop_a, bus_stop_b])
+        bus_driver = BusDriverImpl(bus_route, set())
 
         # WHEN
         bus_driver.drive_to_next_bus_stop()
 
         # THEN
-        bus_stop_a_mock.remove.assert_called_with(bus_driver)
-        bus_stop_b_mock.add.assert_called_with(bus_driver)
+        self.assertEqual(bus_driver.get_current_bus_stop(), bus_stop_b)
 
-        self.assertEqual(
-            bus_driver.get_current_bus_stop(), bus_stop_b_mock
-        )
-
-    @patch('CircularBusRoute.__new__')
-    def test_get_rumors(self, bus_route_mock: Mock):
+    def test_get_rumors(self):
         # GIVEN
+
         bus_driver = BusDriverImpl(
-            bus_route_mock, {self.rumor1, self.rumor2}
+            CircularBusRoute([BusStopImpl()]), {self.rumor1, self.rumor2}
         )
 
         # WHEN
@@ -40,14 +38,13 @@ class BusDriverImplTests(unittest.TestCase):
         # THEN
         self.assertEqual(rumors, {self.rumor1, self.rumor2})
 
-    @patch('CircularBusRoute.__new__')
-    def test_set_rumors(self, bus_route_mock: Mock):
+    def test_set_rumors(self):
         # GIVEN
         rumor3 = Rumor()
         rumor4 = Rumor()
 
         bus_driver = BusDriverImpl(
-            bus_route_mock, {self.rumor1, self.rumor2}
+            CircularBusRoute([BusStopImpl()]), {self.rumor1, self.rumor2}
         )
 
         # WHEN
