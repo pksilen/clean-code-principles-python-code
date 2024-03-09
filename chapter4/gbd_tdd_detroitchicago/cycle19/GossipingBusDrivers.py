@@ -1,6 +1,6 @@
 from BusDriver import BusDriver
-from Rumor import Rumor
 from BusStop import BusStop
+from Rumor import Rumor
 
 
 class GossipingBusDrivers:
@@ -22,8 +22,14 @@ class GossipingBusDrivers:
             self.__share_rumors(bus_stops)
 
             if self.__all_rumors_are_shared():
+                print(
+                    f'All rumors are shared after {self.__driven_stop_count} stop'
+                )
                 return True
             elif self.__driven_stop_count == max_driven_stop_count:
+                print(
+                    f'Rumors were not shared after {max_driven_stop_count} stops'
+                )
                 return False
 
     @staticmethod
