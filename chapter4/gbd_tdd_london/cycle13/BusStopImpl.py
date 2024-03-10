@@ -23,6 +23,3 @@ class BusStopImpl(BusStop):
 
     def remove(self, bus_driver: BusDriver) -> None:
         self.__bus_drivers.remove(bus_driver)
-
-    def get_driver_count(self) -> int:
-        return len(self.__bus_drivers)

@@ -40,19 +40,15 @@ class BusStopImplTests(unittest.TestCase):
         for bus_driver_mock in bus_driver_mocks:
             bus_driver_mock.set_rumors.assert_called_with(all_rumors)
 
-    def test_remove_driver(self):
+    def test_share_rumors_with_drivers__when_driver_is_removed(self):
         # GIVEN
         bus_stop = BusStopImpl()
         bus_driver_mock = Mock()
-
-        # WHEN
         bus_stop.add(bus_driver_mock)
-
-        # THEN
-        self.assertEqual(bus_stop.get_driver_count(), 1)
 
         # WHEN
         bus_stop.remove(bus_driver_mock)
+        bus_stop.share_rumors_with_drivers()
 
         # THEN
-        self.assertEqual(bus_stop.get_driver_count(), 0)
+        self.assertFalse(bus_driver_mock.set_rumors.called)
