@@ -1,4 +1,5 @@
-class BusRoute(Protocol):
+from asyncio import Protocol
 
-    def get_first_bus_stop(self) -> BusStop:
-        pass
+
+class BusRoute(Protocol):
+    pass

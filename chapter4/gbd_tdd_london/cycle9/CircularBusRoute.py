@@ -1,3 +1,9 @@
+from typing import Final
+
+from BusRoute import BusRoute
+from BusStop import BusStop
+
+
 class CircularBusRoute(BusRoute):
     def __init__(self, bus_stops: list[BusStop]):
         if not bus_stops:
@@ -5,8 +11,8 @@ class CircularBusRoute(BusRoute):
 
         self.__bus_stops: Final = bus_stops.copy()
 
-    def get_next_bus_stop(self, current_bus_stop: BusStop) -> BusStop:
+    def get_first_bus_stop(self) -> BusStop:
         return self.__bus_stops[0]
 
-    def get_first_bus_stop(self) -> BusStop:
+    def get_next_bus_stop(self, current_bus_stop: BusStop) -> BusStop:
         return self.__bus_stops[0]
