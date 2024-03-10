@@ -1,4 +1,13 @@
+import unittest
+
+from BusStopImpl import BusStopImpl
+from CircularBusRoute import CircularBusRoute
+
+
 class CircularBusRouteTests(unittest.TestCase):
+    bus_stop1 = BusStopImpl()
+    bus_stop2 = BusStopImpl()
+
     def test_constructor__when_no_bus_stops(self):
         try:
             # WHEN
@@ -11,26 +20,33 @@ class CircularBusRouteTests(unittest.TestCase):
                 str(error), 'Bus route must have at least one bus stop'
             )
 
-    def test_get_next_bus_stop__when_one_bus_stop(self):
+    def test_get_first_bus_stop(self):
         # GIVEN
-        bus_stop = BusStopImpl()
-        bus_route = CircularBusRoute([bus_stop])
+        bus_route = CircularBusRoute([self.bus_stop1, self.bus_stop2])
 
         # WHEN
-        next_bus_stop = bus_route.get_next_bus_stop(bus_stop)
+        first_bus_stop = bus_route.get_first_bus_stop()
 
         # THEN
-        self.assertEqual(next_bus_stop, bus_stop)
+        self.assertEqual(first_bus_stop, self.bus_stop1)
+
+    def test_get_next_bus_stop__when_one_bus_stop(self):
+        # GIVEN
+        bus_route = CircularBusRoute([self.bus_stop1])
+
+        # WHEN
+        next_bus_stop = bus_route.get_next_bus_stop(self.bus_stop1)
+
+        # THEN
+        self.assertEqual(next_bus_stop, self.bus_stop1)
 
     def test_get_next_bus_stop__when_bus_stop_does_not_belong_to_route(self):
         # GIVEN
-        bus_stop_a = BusStopImpl()
-        bus_route = CircularBusRoute([bus_stop_a])
-        bus_stop_b = BusStopImpl()
+        bus_route = CircularBusRoute([self.bus_stop1])
 
         try:
             # WHEN
-            bus_route.get_next_bus_stop(bus_stop_b)
+            bus_route.get_next_bus_stop(self.bus_stop2)
 
             self.fail('ValueError should have been raised')
         except ValueError as error:
@@ -41,24 +57,10 @@ class CircularBusRouteTests(unittest.TestCase):
 
     def test_get_next_bus_stop__when_next_bus_stop_in_list_exists(self):
         # GIVEN
-        bus_stop_a = BusStopImpl()
-        bus_stop_b = BusStopImpl()
-        bus_route = CircularBusRoute([bus_stop_a, bus_stop_b])
+        bus_route = CircularBusRoute([self.bus_stop1, self.bus_stop2])
 
         # WHEN
-        next_bus_stop = bus_route.get_next_bus_stop(bus_stop_a)
+        next_bus_stop = bus_route.get_next_bus_stop(self.bus_stop1)
 
         # THEN
-        self.assertEqual(next_bus_stop, bus_stop_b)
-
-    def test_get_first_bus_stop(self):
-        # GIVEN
-        bus_stop_a = BusStopImpl()
-        bus_stop_b = BusStopImpl()
-        bus_route = CircularBusRoute([bus_stop_a, bus_stop_b])
-
-        # WHEN
-        first_bus_stop = bus_route.get_first_bus_stop()
-
-        # THEN
-        self.assertEqual(first_bus_stop, bus_stop_a)
+        self.assertEqual(next_bus_stop, self.bus_stop2)

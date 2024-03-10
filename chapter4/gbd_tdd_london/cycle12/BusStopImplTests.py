@@ -1,14 +1,17 @@
+import unittest
+from unittest.mock import Mock
+
+from BusDriver import BusDriver
+from BusStopImpl import BusStopImpl
+from Rumor import Rumor
+
+
 class BusStopImplTests(unittest.TestCase):
-    @patch('BusDriverImpl.__new__')
-    @patch('BusDriverImpl.__new__')
-    @patch('BusDriverImpl.__new__')
-    def test_share_rumors_with_drivers(
-        self,
-        bus_driver_mock3: Mock,
-        bus_driver_mock2: Mock,
-        bus_driver_mock1: Mock,
-    ):
+    def test_share_rumors_with_drivers(self):
         # GIVEN
+        bus_driver_mock1 = Mock()
+        bus_driver_mock2 = Mock()
+        bus_driver_mock3 = Mock()
         bus_drivers = [bus_driver_mock1, bus_driver_mock2, bus_driver_mock3]
 
         rumor1 = Rumor()
@@ -31,6 +34,8 @@ class BusStopImplTests(unittest.TestCase):
         # THEN
         self.__assert_rumors_are_set(all_rumors, bus_drivers)
 
-    def __assert_rumors_are_set(self, all_rumors, bus_driver_mocks):
+    def __assert_rumors_are_set(
+        self, all_rumors: set[Rumor], bus_driver_mocks: list[BusDriver]
+    ):
         for bus_driver_mock in bus_driver_mocks:
             bus_driver_mock.set_rumors.assert_called_with(all_rumors)
