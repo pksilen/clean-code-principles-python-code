@@ -13,3 +13,6 @@ class CircularBusRoute(BusRoute):
 
     def get_first_bus_stop(self) -> BusStop:
         return self.__bus_stops[0]
+
+    def get_next_bus_stop(self, current_bus_stop: BusStop) -> BusStop:
+        return self.__bus_stops[0]

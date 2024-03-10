@@ -2,4 +2,5 @@ from typing import Protocol
 
 
 class BusStop(Protocol):
-    pass
+    def share_rumors_with_drivers(self):
+        pass

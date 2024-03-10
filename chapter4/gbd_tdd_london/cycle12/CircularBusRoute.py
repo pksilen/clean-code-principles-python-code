@@ -1,7 +1,7 @@
 from typing import Final
 
-from cycle10.BusRoute import BusRoute
-from cycle10.BusStop import BusStop
+from cycle9.BusRoute import BusRoute
+from cycle9.BusStop import BusStop
 
 
 class CircularBusRoute(BusRoute):

@@ -15,4 +15,7 @@ class CircularBusRoute(BusRoute):
         return self.__bus_stops[0]
 
     def get_next_bus_stop(self, current_bus_stop: BusStop) -> BusStop:
+        if current_bus_stop not in self.__bus_stops:
+            raise ValueError('Bus stop does not belong to bus route')
+
         return self.__bus_stops[0]

@@ -4,8 +4,11 @@ from BusDriver import BusDriver
 
 
 class BusStop(Protocol):
-    def share_rumors_with_drivers(self) -> None:
+    def share_rumors_with_drivers(self):
         pass
 
-    def add_bus_driver(self, bus_driver: BusDriver) -> None:
+    def add(self, bus_driver: BusDriver) -> None:
+        pass
+
+    def remove(self, bus_driver: BusDriver) -> None:
         pass

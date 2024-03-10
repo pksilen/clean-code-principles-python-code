@@ -39,3 +39,20 @@ class CircularBusRouteTests(unittest.TestCase):
 
         # THEN
         self.assertEqual(next_bus_stop, bus_stop)
+
+    def test_get_next_bus_stop__when_bus_stop_does_not_belong_to_route(self):
+        # GIVEN
+        bus_stop1 = BusStopImpl()
+        bus_route = CircularBusRoute([bus_stop1])
+        bus_stop2 = BusStopImpl()
+
+        try:
+            # WHEN
+            bus_route.get_next_bus_stop(bus_stop2)
+
+            self.fail('ValueError should have been raised')
+        except ValueError as error:
+            # THEN
+            self.assertEqual(
+                str(error), 'Bus stop does not belong to bus route'
+            )

@@ -1,6 +1,6 @@
 import unittest
+from unittest.mock import Mock
 
-from BusStopImpl import BusStopImpl
 from CircularBusRoute import CircularBusRoute
 
 
@@ -19,23 +19,12 @@ class CircularBusRouteTests(unittest.TestCase):
 
     def test_get_first_bus_stop(self):
         # GIVEN
-        bus_stop1 = BusStopImpl()
-        bus_stop2 = BusStopImpl()
-        bus_route = CircularBusRoute([bus_stop1, bus_stop2])
+        bus_stop_mock1 = Mock()
+        bus_stop_mock2 = Mock()
+        bus_route = CircularBusRoute([bus_stop_mock1, bus_stop_mock2])
 
         # WHEN
         first_bus_stop = bus_route.get_first_bus_stop()
 
         # THEN
-        self.assertEqual(first_bus_stop, bus_stop1)
-
-    def test_get_next_bus_stop__when_one_bus_stop(self):
-        # GIVEN
-        bus_stop = BusStopImpl()
-        bus_route = CircularBusRoute([bus_stop])
-
-        # WHEN
-        next_bus_stop = bus_route.get_next_bus_stop(bus_stop)
-
-        # THEN
-        self.assertEqual(next_bus_stop, bus_stop)
+        self.assertEqual(first_bus_stop, bus_stop_mock1)
