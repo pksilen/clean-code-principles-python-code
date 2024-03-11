@@ -28,7 +28,7 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
 
             sql_statement = (
                 'INSERT INTO salesitems'
-                '(id, createdAtTimestampInMs, name, priceInCents)'
+                ' (id, createdAtTimestampInMs, name, priceInCents)'
                 ' VALUES (%s, %s, %s, %s)'
             )
 
@@ -42,7 +42,7 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
                 ),
             )
 
-            self.__try_insert_sales_item_images(
+            self.__insert_sales_item_images(
                 sales_item.id, sales_item.images, cursor
             )
 
@@ -127,8 +127,8 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
 
             cursor.execute(sql_statement, (sales_item.id,))
 
-            self.__try_insert_sales_item_images(
-                sales_item.id, sales_item_update.images, cursor
+            self.__insert_sales_item_images(
+                sales_item.id, sales_item.images, cursor
             )
 
             connection.commit()
@@ -201,8 +201,8 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
             'id VARCHAR(36) NOT NULL,'
             '`rank` INTEGER NOT NULL,'
             'url VARCHAR(2084) NOT NULL,'
-            'salesItemId BIGINT NOT NULL,'
-            'PRIMARY KEY (salesItemId, id),'
+            'salesItemId VARCHAR(36) NOT NULL,'
+            'PRIMARY KEY (id),'
             'FOREIGN KEY (salesItemId) REFERENCES salesitems(id)'
             ')'
         )
@@ -211,19 +211,17 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
         connection.commit()
         connection.close()
 
-    def __try_insert_sales_item_images(
-        self, sales_item_id: str | int, images, cursor
-    ):
+    def __insert_sales_item_images(self, sales_item_id: str, images, cursor):
         for image in images:
             sql_statement = (
                 'INSERT INTO salesitemimages'
-                '(id, `rank`, url, salesItemId)'
-                'VALUES (%s, %s, %s, %s)'
+                ' (id, `rank`, url, salesItemId)'
+                ' VALUES (%s, %s, %s, %s)'
             )
 
             cursor.execute(
                 sql_statement,
-                (image.id, image.rank, image.url, sales_item_id),
+                (image.id, image.rank, str(image.url), sales_item_id),
             )
 
     def __get_sales_items(self, cursor) -> list[SalesItem]:
@@ -240,13 +238,11 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
         ) in cursor:
             if id_to_sales_item.get(id_) is None:
                 id_to_sales_item[id_] = SalesItem(
-                    **{
-                        'id': id_,
-                        'createdAtTimestampInMs': created_at_timestamp_in_ms,
-                        'name': name,
-                        'priceInCents': price_in_cents,
-                        'images': [],
-                    }
+                    id=id_,
+                    createdAtTimestampInMs=created_at_timestamp_in_ms,
+                    name=name,
+                    priceInCents=price_in_cents,
+                    images=[],
                 )
 
             if image_id is not None:
@@ -254,4 +250,4 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
                     SalesItemImage(id=image_id, rank=image_rank, url=image_url)
                 )
 
-        return id_to_sales_item.values()
+        return list(id_to_sales_item.values())

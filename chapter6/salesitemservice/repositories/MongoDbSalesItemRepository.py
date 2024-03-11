@@ -84,8 +84,8 @@ class MongoDbSalesItemRepository(SalesItemRepository):
             'images': [
                 {
                     'id': image.id,
-                    'rank': image.salesItemId,
-                    'url': image.quantity,
+                    'rank': image.rank,
+                    'url': image.url,
                 }
                 for image in sales_item.images
             ],

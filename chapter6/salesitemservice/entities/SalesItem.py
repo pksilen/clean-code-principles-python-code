@@ -7,14 +7,8 @@ from ..dtos.InputSalesItem import InputSalesItem
 
 class SalesItem:
     def __init__(self, **kwargs):
-        # Generating entity id on server side is good practice
-        # for high security and distributed databases
-        # Having all ids as string allows represents ids
-        # consistently regardless of database engine and programming
-        # languages used
-        self.__id = kwargs.get('id') or str(uuid4())
-
-        self.__created_at_timestamp_in_ms = round(time.time() * 1000)
+        self.__id = kwargs['id']
+        self.__created_at_timestamp_in_ms = kwargs['createdAtTimestampInMs']
         self.__name = kwargs['name']
         self.__price_in_cents = kwargs['priceInCents']
         self.__images = [SalesItemImage(**image) for image in kwargs['images']]
@@ -29,7 +23,16 @@ class SalesItem:
     def create_from(
         input_sales_item: InputSalesItem, id_: str | None = None
     ) -> 'SalesItem':
-        return SalesItem(**{**input_sales_item.dict(), 'id': id_})
+        # Generating entity id on server side is good practice
+        # for high security and distributed databases
+        # Having all ids as string allows represents ids
+        # consistently regardless of database engine and programming
+        # languages used
+        return SalesItem(
+            **input_sales_item.dict(),
+            id=id_ or str(uuid4()),
+            createdAtTimestampInMs=round(time.time() * 1000),
+        )
 
     @property
     def id(self) -> str:
