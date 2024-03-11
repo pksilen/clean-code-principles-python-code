@@ -10,3 +10,5 @@ class OutputSalesItem(BaseModel):
     priceInCents: int
     images: list[OutputSalesItemImage] = Field(max_items=25)
 
+    class Config:
+        from_attributes = True

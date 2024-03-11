@@ -27,7 +27,7 @@ class SalesItem:
     # You could instantiate different types of domain entities here
     @staticmethod
     def create_from(
-        input_sales_item: InputSalesItem, id_: str | None
+        input_sales_item: InputSalesItem, id_: str | None = None
     ) -> 'SalesItem':
         return SalesItem(**{**input_sales_item.dict(), 'id': id_})
 

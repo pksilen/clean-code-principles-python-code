@@ -23,22 +23,18 @@ class DbSalesItem(Base):
     @staticmethod
     def create_from(sales_item: SalesItem) -> 'DbSalesItem':
         return DbSalesItem(
-            **{
-                'id': sales_item.id,
-                'createdAtTimestampInMs': sales_item.createdAtTimestampInMs,
-                'name': sales_item.name,
-                'priceInCents': sales_item.priceInCents,
-                'images': [
-                    DbSalesItemImage(
-                        **{
-                            'id': image.id,
-                            'rank': image.rank,
-                            'url': image.url,
-                        }
-                    )
-                    for image in sales_item.images
-                ],
-            }
+            id=sales_item.id,
+            createdAtTimestampInMs=sales_item.createdAtTimestampInMs,
+            name=sales_item.name,
+            priceInCents=sales_item.priceInCents,
+            images=[
+                DbSalesItemImage(
+                    id=image.id,
+                    rank=image.rank,
+                    url=image.url,
+                )
+                for image in sales_item.images
+            ],
         )
 
     # This is a conversion method for converting
@@ -46,18 +42,16 @@ class DbSalesItem(Base):
     # Those two can have different representations
     def to_domain_entity(self) -> SalesItem:
         return SalesItem(
-            **{
-                'id': self.id,
-                'createdAtTimestampInMs': self.createdAtTimestampInMs,
-                'name': self.name,
-                'priceInCents': self.priceInCents,
-                'images': [
-                    {
-                        'id': image.id,
-                        'rank': image.rank,
-                        'quantity': image.url,
-                    }
-                    for image in self.images
-                ],
-            }
+            id=self.id,
+            createdAtTimestampInMs=self.createdAtTimestampInMs,
+            name=self.name,
+            priceInCents=self.priceInCents,
+            images=[
+                {
+                    'id': image.id,
+                    'rank': image.rank,
+                    'url': image.url,
+                }
+                for image in self.images
+            ],
         )

@@ -8,6 +8,6 @@ class DatabaseError(SalesItemServiceError):
             'Internal Server Error',
             'Database error',
             'DatabaseError',
-            '',
+            str(error),
             error,
         )

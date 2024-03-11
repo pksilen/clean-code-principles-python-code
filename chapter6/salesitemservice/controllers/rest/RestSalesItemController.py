@@ -69,9 +69,7 @@ class RestSalesItemController:
     def update_sales_item(
         self, id_: str, input_sales_item: InputSalesItem
     ) -> None:
-        return self.__sales_item_service.update_sales_item(
-            id_, input_sales_item
-        )
+        self.__sales_item_service.update_sales_item(id_, input_sales_item)
 
     def delete_sales_item(self, id_: str, request: Request) -> None:
-        return self.__sales_item_service.delete_sales_item(id_)
+        self.__sales_item_service.delete_sales_item(id_)
