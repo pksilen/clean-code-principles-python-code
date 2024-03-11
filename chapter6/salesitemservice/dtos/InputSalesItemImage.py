@@ -1,6 +1,9 @@
-from pydantic import BaseModel, Field, HttpUrl, PositiveInt
+from pydantic import AfterValidator, BaseModel, HttpUrl, PositiveInt
+from typing_extensions import Annotated
+
+HttpUrlString = Annotated[HttpUrl, AfterValidator(lambda url: str(url))]
 
 
 class InputSalesItemImage(BaseModel):
     rank: PositiveInt
-    url: HttpUrl = Field(max_length=2048)
+    url: HttpUrlString

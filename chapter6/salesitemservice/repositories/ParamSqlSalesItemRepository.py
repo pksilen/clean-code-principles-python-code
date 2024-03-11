@@ -221,7 +221,7 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
 
             cursor.execute(
                 sql_statement,
-                (image.id, image.rank, str(image.url), sales_item_id),
+                (image.id, image.rank, image.url, sales_item_id),
             )
 
     def __get_sales_items(self, cursor) -> list[SalesItem]:
