@@ -10,7 +10,7 @@ from ..entities.SalesItem import SalesItem
 from ..entities.SalesItemImage import SalesItemImage
 from ..errors.DatabaseError import DatabaseError
 from ..errors.EntityNotFoundError import EntityNotFoundError
-from ..utils import to_entity_dict
+from chapter6.salesitemservice.common.utils import to_entity_dict
 from .SalesItemRepository import SalesItemRepository
 
 

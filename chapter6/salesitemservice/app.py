@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 
 from .DiContainer import DiContainer
 from .errors.SalesItemServiceError import SalesItemServiceError
-from .utils import get_stack_trace, get_error_response
+from chapter6.salesitemservice.common.utils import get_error_response
 
 # Remove the below setting of the env variable for production code!
 # mysql+pymysql://root:password@localhost:3306/salesitemservice
