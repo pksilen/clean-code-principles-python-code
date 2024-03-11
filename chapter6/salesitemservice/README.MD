@@ -52,16 +52,3 @@ uvicorn orderservice.app:app
 Sample HTTP requests are available in scratches/orderservice_rest.http and 
 scratches/orderservice_graphql.http files.
 You can use these requests with the PyCharm Professional's HTTP client.
-
-## Start Flask REST Server
-```bash
-# Choose one of the below commands depending whether you want to use MySQL or MongoDB
-export DATABASE_URL=mongodb://localhost:27017/orderservice
-export DATABASE_URL=mysql+pymysql://root:password@localhost:3306/orderservice
-
-cd ..
-python -m orderservice.app_flask
-```
-
-Sample HTTP requests are available in scratches/orderservice_rest.http file.
-You can use these requests with the PyCharm Professional's HTTP client.
