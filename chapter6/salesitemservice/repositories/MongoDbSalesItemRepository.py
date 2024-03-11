@@ -61,7 +61,14 @@ class MongoDbSalesItemRepository(SalesItemRepository):
                     '$set': {
                         'name': sales_item.name,
                         'priceInCents': sales_item.priceInCents,
-                        'images': sales_item.images,
+                        'images': [
+                            {
+                                'id': image.id,
+                                'rank': image.rank,
+                                'url': image.url,
+                            }
+                            for image in sales_item.images
+                        ],
                     }
                 },
             )
