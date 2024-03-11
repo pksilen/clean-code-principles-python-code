@@ -1,7 +1,7 @@
 import strawberry
 
-from ..dtos.InputSalesItem import InputSalesItem
 from .InputSalesItemImage import InputSalesItemImage
+from ....dtos.InputSalesItem import InputSalesItem
 
 
 @strawberry.experimental.pydantic.input(model=InputSalesItem)

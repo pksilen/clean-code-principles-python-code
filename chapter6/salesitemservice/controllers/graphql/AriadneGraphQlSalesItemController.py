@@ -1,8 +1,8 @@
 from ariadne import MutationType, QueryType, gql, make_executable_schema
 from dependency_injector.wiring import Provide
 
-from ..dtos.InputSalesItem import InputSalesItem
-from ..service.SalesItemService import SalesItemService
+from ...dtos.InputSalesItem import InputSalesItem
+from ...service.SalesItemService import SalesItemService
 
 sales_item_service: SalesItemService = Provide['sales_item_service']
 

@@ -1,10 +1,8 @@
 import strawberry
 
-from ..dtos.InputSalesItemImage import SalesItemImage
+from ....dtos.InputSalesItemImage import SalesItemImage
 
 
-@strawberry.experimental.pydantic.type(
-    model=SalesItemImage, all_fields=True
-)
+@strawberry.experimental.pydantic.type(model=SalesItemImage, all_fields=True)
 class OutputSalesItemImage:
     pass

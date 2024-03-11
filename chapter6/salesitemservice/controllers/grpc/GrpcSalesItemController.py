@@ -4,8 +4,6 @@ from google.rpc import code_pb2, status_pb2
 from grpc_status import rpc_status
 from pydantic import ValidationError
 
-from ..dtos.InputSalesItem import InputSalesItem as PydanticInputSalesItem
-from ..errors.SalesItemServiceError import SalesItemServiceError
 from ..grpc.proto_to_dict import proto_to_dict
 from ..grpc.sales_item_service_pb2 import (
     ErrorDetails,
@@ -18,8 +16,10 @@ from ..grpc.sales_item_service_pb2 import (
     SalesItemUpdate,
 )
 from ..grpc.sales_item_service_pb2_grpc import SalesItemServiceServicer
-from ..service.SalesItemService import SalesItemService
-from ..utils import get_stack_trace
+from ...common.utils.utils import get_stack_trace
+from ...dtos.InputSalesItem import InputSalesItem as PydanticInputSalesItem
+from ...errors.SalesItemServiceError import SalesItemServiceError
+from ...service.SalesItemService import SalesItemService
 
 
 def map_http_status_code_to_grpc_status_code(error: Exception):
@@ -51,9 +51,7 @@ def create_status_from(error: Exception) -> status_pb2.Status:
         grpc_status_code = code_pb2.INVALID_ARGUMENT
         message = 'Request validation failed'
         detail.Pack(
-            ErrorDetails(
-                code='RequestValidationError', description=str(error)
-            )
+            ErrorDetails(code='RequestValidationError', description=str(error))
         )
     else:
         grpc_status_code = code_pb2.INTERNAL
@@ -94,9 +92,7 @@ class GrpcSalesItemController(SalesItemServiceServicer):
 
             output_sales_item = OutputSalesItem()
 
-            json_format.ParseDict(
-                output_sales_item_dict, output_sales_item
-            )
+            json_format.ParseDict(output_sales_item_dict, output_sales_item)
 
             return output_sales_item
         except Exception as error:
@@ -109,9 +105,7 @@ class GrpcSalesItemController(SalesItemServiceServicer):
             # NOTE! Here we don't use the input message
             # 'get_sales_items_arg' because our current
             # business logic does not support it
-            output_sales_items = (
-                self.__sales_item_service.get_sales_items()
-            )
+            output_sales_items = self.__sales_item_service.get_sales_items()
 
             output_sales_items = [
                 json_format.ParseDict(
@@ -126,15 +120,13 @@ class GrpcSalesItemController(SalesItemServiceServicer):
 
     def getSalesItem(self, id: Id, context):
         try:
-            output_sales_item_dict = (
-                self.__sales_item_service.get_sales_item(id.id).dict()
-            )
+            output_sales_item_dict = self.__sales_item_service.get_sales_item(
+                id.id
+            ).dict()
 
             output_sales_item = OutputSalesItem()
 
-            json_format.ParseDict(
-                output_sales_item_dict, output_sales_item
-            )
+            json_format.ParseDict(output_sales_item_dict, output_sales_item)
 
             return output_sales_item
         except Exception as error:
@@ -149,9 +141,7 @@ class GrpcSalesItemController(SalesItemServiceServicer):
                 sales_item_update_dict
             )
 
-            self.__sales_item_service.update_sales_item(
-                id_, sales_item_update
-            )
+            self.__sales_item_service.update_sales_item(id_, sales_item_update)
 
             return Nothing()
         except Exception as error:

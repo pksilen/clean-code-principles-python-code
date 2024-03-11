@@ -1,11 +1,9 @@
 from dependency_injector.wiring import Provide
 from fastapi import APIRouter, Request
 
-from ..decorators.audit_log import audit_log
-from ..decorators.increment_counter import increment_counter
-from ..dtos.InputSalesItem import InputSalesItem
-from ..dtos.OutputSalesItem import OutputSalesItem
-from ..service.SalesItemService import SalesItemService
+from ...dtos.InputSalesItem import InputSalesItem
+from ...dtos.OutputSalesItem import OutputSalesItem
+from ...service.SalesItemService import SalesItemService
 
 
 class RestSalesItemController:
@@ -60,9 +58,7 @@ class RestSalesItemController:
     def create_sales_item(
         self, input_sales_item: InputSalesItem
     ) -> OutputSalesItem:
-        return self.__sales_item_service.create_sales_item(
-            input_sales_item
-        )
+        return self.__sales_item_service.create_sales_item(input_sales_item)
 
     def get_sales_items(self) -> list[OutputSalesItem]:
         return self.__sales_item_service.get_sales_items()

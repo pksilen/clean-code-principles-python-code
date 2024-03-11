@@ -3,10 +3,10 @@ from dependency_injector.wiring import Provide
 from strawberry.fastapi import GraphQLRouter
 from strawberry.types import Info
 
-from ..graphqltypes.IdReponse import IdResponse
-from ..graphqltypes.InputSalesItem import InputSalesItem
-from ..graphqltypes.OutputSalesItem import OutputSalesItem
-from ..service.SalesItemService import SalesItemService
+from .types.Id import Id
+from .types.InputSalesItem import InputSalesItem
+from .types.OutputSalesItem import OutputSalesItem
+from ...service.SalesItemService import SalesItemService
 
 sales_item_service: SalesItemService = Provide['sales_item_service']
 
@@ -43,17 +43,17 @@ class StrawberryGraphQlSalesItemController:
         @strawberry.mutation
         def updateSalesItem(
             self, info: Info, id: str, inputSalesItem: InputSalesItem
-        ) -> IdResponse:
+        ) -> Id:
             sales_item_service.update_sales_item(
                 id, inputSalesItem.to_pydantic()
             )
 
-            return IdResponse(id=id)
+            return Id(id=id)
 
         @strawberry.mutation
-        def deleteSalesItem(self, info: Info, id: str) -> IdResponse:
+        def deleteSalesItem(self, info: Info, id: str) -> Id:
             sales_item_service.delete_sales_item(id)
-            return IdResponse(id=id)
+            return Id(id=id)
 
     __schema = strawberry.Schema(query=Query, mutation=Mutation)
     __router = GraphQLRouter(__schema, path='/graphql')

@@ -2,5 +2,5 @@ import strawberry
 
 
 @strawberry.type
-class IdResponse:
+class Id:
     id: str

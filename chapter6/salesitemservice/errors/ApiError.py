@@ -1,4 +1,7 @@
-from typing import Final
+from datetime import datetime
+from typing import Final, Any
+
+from ..common.utils.utils import get_stack_trace
 
 
 class ApiError(Exception):
@@ -23,7 +26,7 @@ class ApiError(Exception):
     def status_code(self) -> int:
         return self.__status_code
 
-    def to_dict(self, endpoint: str) -> dict[str, Any]:
+    def to_dict(self, endpoint: str | None) -> dict[str, Any]:
         return {
             'statusCode': self.__status_code,
             'statusText': self.__status_text,

@@ -1,3 +1,6 @@
+from uuid import uuid4
+
+
 class SalesItemImage:
     def __init__(self, **kwargs):
         self.__id = str(uuid4())
