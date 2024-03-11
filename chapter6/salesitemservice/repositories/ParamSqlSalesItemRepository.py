@@ -1,17 +1,13 @@
 import os
-import time
 from typing import Any
 
 from mysql.connector import connect
 from mysql.connector.errors import Error
 
-from ..dtos.InputSalesItem import InputSalesItem
+from .SalesItemRepository import SalesItemRepository
 from ..entities.SalesItem import SalesItem
 from ..entities.SalesItemImage import SalesItemImage
 from ..errors.DatabaseError import DatabaseError
-from ..errors.EntityNotFoundError import EntityNotFoundError
-from chapter6.salesitemservice.common.utils import to_entity_dict
-from .SalesItemRepository import SalesItemRepository
 
 
 class ParamSqlSalesItemRepository(SalesItemRepository):
@@ -23,7 +19,7 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
             # Log error
             raise (error)
 
-    def save(self, input_sales_item: InputSalesItem) -> SalesItem:
+    def save(self, sales_item: SalesItem) -> None:
         connection = None
 
         try:
@@ -32,34 +28,25 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
 
             sql_statement = (
                 'INSERT INTO salesitems'
-                '(createdAtTimestampInMs, name, priceInCents)'
-                ' VALUES (%s, %s, %s)'
+                '(id, createdAtTimestampInMs, name, priceInCents)'
+                ' VALUES (%s, %s, %s, %s)'
             )
-
-            created_at_timestamp_in_ms = time.time_ns() / 1_000_000
 
             cursor.execute(
                 sql_statement,
                 (
-                    created_at_timestamp_in_ms,
-                    input_sales_item.name,
-                    input_sales_item.priceInCents,
+                    sales_item.id,
+                    sales_item.createdAtTimestampInMs,
+                    sales_item.name,
+                    sales_item.priceInCents,
                 ),
             )
 
-            id_ = cursor.lastrowid
-
             self.__try_insert_sales_item_images(
-                id_, input_sales_item.images, cursor
+                sales_item.id, sales_item.images, cursor
             )
 
             connection.commit()
-
-            return SalesItem(
-                **to_entity_dict(input_sales_item),
-                id=id_,
-                createdAtTimestampInMs=created_at_timestamp_in_ms,
-            )
         except Error as error:
             raise DatabaseError(error)
         finally:
@@ -81,7 +68,7 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
             )
 
             cursor.execute(sql_statement)
-            return self.__get_sales_item_entities(cursor)
+            return self.__get_sales_items(cursor)
         except Error as error:
             print(error)
             raise DatabaseError(error)
@@ -90,9 +77,6 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
                 connection.close()
 
     def find(self, id_: str) -> SalesItem | None:
-        if not id_.isnumeric():
-            raise EntityNotFoundError('Sales item', id_)
-
         connection = None
 
         try:
@@ -108,19 +92,15 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
             )
 
             cursor.execute(sql_statement, (id_,))
-
-            sales_item_entities = self.__get_sales_item_entities(cursor)
-            return sales_item_entities[0] if sales_item_entities else None
+            sales_items = self.__get_sales_items(cursor)
+            return sales_items[0] if sales_items else None
         except Error as error:
             raise DatabaseError(error)
         finally:
             if connection:
                 connection.close()
 
-    def update(self, id_: str, sales_item_update: InputSalesItem) -> None:
-        if not id_.isnumeric():
-            raise EntityNotFoundError('Sales item', id_)
-
+    def update(self, sales_item: SalesItem) -> None:
         connection = None
 
         try:
@@ -135,9 +115,9 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
             cursor.execute(
                 sql_statement,
                 (
-                    sales_item_update.name,
-                    sales_item_update.priceInCents,
-                    id_,
+                    sales_item.name,
+                    sales_item.priceInCents,
+                    sales_item.id,
                 ),
             )
 
@@ -145,10 +125,10 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
                 'DELETE FROM salesitemimages WHERE salesItemId = %s'
             )
 
-            cursor.execute(sql_statement, (id_,))
+            cursor.execute(sql_statement, (sales_item.id,))
 
             self.__try_insert_sales_item_images(
-                id_, sales_item_update.images, cursor
+                sales_item.id, sales_item_update.images, cursor
             )
 
             connection.commit()
@@ -159,9 +139,6 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
                 connection.close()
 
     def delete(self, id_: str) -> None:
-        if not id_.isnumeric():
-            return
-
         connection = None
 
         try:
@@ -209,7 +186,7 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
 
         sql_statement = (
             'CREATE TABLE IF NOT EXISTS salesitems ('
-            'id BIGINT NOT NULL AUTO_INCREMENT,'
+            'id VARCHAR(36) NOT NULL,'
             'createdAtTimestampInMs BIGINT NOT NULL,'
             'name VARCHAR(256) NOT NULL,'
             'priceInCents INTEGER NOT NULL,'
@@ -221,7 +198,7 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
 
         sql_statement = (
             'CREATE TABLE IF NOT EXISTS salesitemimages ('
-            'id BIGINT NOT NULL,'
+            'id VARCHAR(36) NOT NULL,'
             '`rank` INTEGER NOT NULL,'
             'url VARCHAR(2084) NOT NULL,'
             'salesItemId BIGINT NOT NULL,'
@@ -249,8 +226,8 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
                 (image.id, image.rank, image.url, sales_item_id),
             )
 
-    def __get_sales_item_entities(self, cursor):
-        id_to_sales_items_dict = dict()
+    def __get_sales_items(self, cursor) -> list[SalesItem]:
+        id_to_sales_item = dict()
 
         for (
             id_,
@@ -261,23 +238,20 @@ class ParamSqlSalesItemRepository(SalesItemRepository):
             image_rank,
             image_url,
         ) in cursor:
-            if id_to_sales_items_dict.get(id_) is None:
-                id_to_sales_items_dict[id_] = {
-                    'id': id_,
-                    'createdAtTimestampInMs': created_at_timestamp_in_ms,
-                    'name': name,
-                    'priceInCents': price_in_cents,
-                    'images': [],
-                }
-
-            if image_id is not None:
-                id_to_sales_items_dict[id_]['images'].append(
-                    SalesItemImage(
-                        id=image_id, rank=image_rank, url=image_url
-                    )
+            if id_to_sales_item.get(id_) is None:
+                id_to_sales_item[id_] = SalesItem(
+                    **{
+                        'id': id_,
+                        'createdAtTimestampInMs': created_at_timestamp_in_ms,
+                        'name': name,
+                        'priceInCents': price_in_cents,
+                        'images': [],
+                    }
                 )
 
-        return [
-            SalesItem(**sales_item_dict)
-            for sales_item_dict in id_to_sales_items_dict.values()
-        ]
+            if image_id is not None:
+                id_to_sales_item[id_].images.append(
+                    SalesItemImage(id=image_id, rank=image_rank, url=image_url)
+                )
+
+        return id_to_sales_item.values()

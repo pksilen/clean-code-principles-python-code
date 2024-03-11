@@ -1,20 +1,10 @@
-import os
-
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from .DiContainer import DiContainer
+from .common.utils.utils import get_error_response
 from .errors.SalesItemServiceError import SalesItemServiceError
-from chapter6.salesitemservice.common.utils import get_error_response
-
-# Remove the below setting of the env variable for production code!
-# mysql+pymysql://root:password@localhost:3306/salesitemservice
-# mongodb://localhost:27017/salesitemservice
-os.environ[
-    'DATABASE_URL'
-] = 'mysql+pymysql://root:password@localhost:3306/salesitemservice'
-
 
 di_container = DiContainer()
 app = FastAPI()
@@ -34,7 +24,7 @@ def handle_sales_item_service_error(
 
     return JSONResponse(
         status_code=error.status_code,
-        content=error.to_dict(f'{request.method} {request.url}')
+        content=error.to_dict(f'{request.method} {request.url}'),
     )
 
 
@@ -52,7 +42,9 @@ def handle_request_validation_error(
 
     return JSONResponse(
         status_code=400,
-        content=get_error_response(error, 400, 'RequestValidationError', request)
+        content=get_error_response(
+            error, 400, 'RequestValidationError', request
+        ),
     )
 
 
@@ -67,7 +59,9 @@ def handle_unspecified_error(request: Request, error: Exception):
 
     return JSONResponse(
         status_code=500,
-        content=get_error_response(error, 500, 'UnspecifiedInternalError', request)
+        content=get_error_response(
+            error, 500, 'UnspecifiedInternalError', request
+        ),
     )
 
 

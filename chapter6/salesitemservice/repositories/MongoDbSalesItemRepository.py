@@ -1,18 +1,13 @@
 import os
-import time
 from typing import Any
 
-from bson.errors import BSONError, InvalidId
-from bson.objectid import ObjectId
+from bson.errors import BSONError
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 
-from ..dtos.InputSalesItem import InputSalesItem
-from ..entities.SalesItem import SalesItem
-from ..entities.SalesItemImage import SalesItemImage
-from ..errors.DatabaseError import DatabaseError
-from ..errors.EntityNotFoundError import EntityNotFoundError
 from .SalesItemRepository import SalesItemRepository
+from ..entities.SalesItem import SalesItem
+from ..errors.DatabaseError import DatabaseError
 
 
 class MongoDbSalesItemRepository(SalesItemRepository):
@@ -27,71 +22,77 @@ class MongoDbSalesItemRepository(SalesItemRepository):
             # Log error
             raise (error)
 
-    def save(self, input_sales_item: InputSalesItem) -> SalesItem:
+    def save(self, sales_item: SalesItem) -> None:
         try:
-            sales_item = input_sales_item.dict() | {
-                'createdAtTimestampInMs': time.time_ns() / 1_000_000
-            }
-
-            self.__sales_items.insert_one(sales_item)
-            return self.__create_sales_item_entity(sales_item)
-
+            sales_item_dict = self.__to_dict(sales_item)
+            self.__sales_items.insert_one(sales_item_dict)
         except PyMongoError as error:
             raise DatabaseError(error)
 
     def find_all(self) -> list[SalesItem]:
         try:
-            sales_items = self.__sales_items.find()
+            sales_item_dicts = self.__sales_items.find()
+
             return [
-                self.__create_sales_item_entity(sales_item)
-                for sales_item in sales_items
+                self.__to_domain_entity(sales_item_dict)
+                for sales_item_dict in sales_item_dicts
             ]
+
         except PyMongoError as error:
             raise DatabaseError(error)
 
     def find(self, id_: str) -> SalesItem | None:
         try:
-            sales_item = self.__sales_items.find_one(
-                {'_id': ObjectId(id_)}
-            )
+            sales_item_dict = self.__sales_items.find_one({'_id': id_})
 
             return (
                 None
-                if sales_item is None
-                else self.__create_sales_item_entity(sales_item)
+                if sales_item_dict is None
+                else self.__to_domain_entity(sales_item_dict)
             )
-        except InvalidId:
-            raise EntityNotFoundError('Sales item', id_)
         except (BSONError, PyMongoError) as error:
             raise DatabaseError(error)
 
-    def update(self, id_: str, sales_item_update: InputSalesItem) -> None:
+    def update(self, sales_item: SalesItem) -> None:
         try:
             self.__sales_items.update_one(
-                {'_id': ObjectId(id_)}, {'$set': sales_item_update.dict()}
+                {'_id': sales_item.id},
+                {
+                    '$set': {
+                        'name': sales_item.name,
+                        'priceInCents': sales_item.priceInCents,
+                        'images': sales_item.images,
+                    }
+                },
             )
-        except InvalidId:
-            raise EntityNotFoundError('Sales item', id_)
         except (BSONError, PyMongoError) as error:
             raise DatabaseError(error)
 
     def delete(self, id_: str) -> None:
         try:
-            self.__sales_items.delete_one({'_id': ObjectId(id_)})
-        except InvalidId:
-            pass
+            self.__sales_items.delete_one({'_id': id_})
         except (BSONError, PyMongoError) as error:
             raise DatabaseError(error)
 
     @staticmethod
-    def __create_sales_item_entity(sales_item: dict[str, Any]):
-        id_ = sales_item['_id']
-        del sales_item['_id']
+    def __to_dict(sales_item: SalesItem) -> dict[str, Any]:
+        return {
+            '_id': sales_item.id,
+            'createdAtTimestampInMs': sales_item.createdAtTimestampInMs,
+            'name': sales_item.name,
+            'priceInCents': sales_item.priceInCents,
+            'images': [
+                {
+                    'id': image.id,
+                    'rank': image.salesItemId,
+                    'url': image.quantity,
+                }
+                for image in sales_item.images
+            ],
+        }
 
-        images = [
-            SalesItemImage(**image) for image in sales_item['images']
-        ]
-
-        return SalesItem(
-            **(sales_item | {'id': str(id_)} | {'images': images})
-        )
+    @staticmethod
+    def __to_domain_entity(sales_item_dict: dict[str, Any]) -> SalesItem:
+        id_ = sales_item_dict['_id']
+        del sales_item_dict['_id']
+        return SalesItem(**(sales_item_dict | {'id': str(id_)}))

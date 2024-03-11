@@ -1,17 +1,14 @@
 import os
-import time
 
 from sqlalchemy import create_engine, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 
-from ..dtos.InputSalesItem import InputSalesItem
-from ..entities.Base import Base
-from ..entities.SalesItem import SalesItem
-from ..errors.DatabaseError import DatabaseError
-from ..errors.EntityNotFoundError import EntityNotFoundError
-from ..utils import to_entity_dict
-from .SalesItemRepository import SalesItemRepository
+from .entities.Base import Base
+from .entities.DbSalesItem import DbSalesItem
+from ..SalesItemRepository import SalesItemRepository
+from ...entities.SalesItem import SalesItem
+from ...errors.DatabaseError import DatabaseError
 
 
 class OrmSalesItemRepository(SalesItemRepository):
@@ -26,49 +23,49 @@ class OrmSalesItemRepository(SalesItemRepository):
             # Log error
             raise error
 
-    def save(self, input_sales_item: InputSalesItem) -> SalesItem:
+    def save(self, sales_item: SalesItem) -> None:
         try:
             with self.__SessionLocal() as db_session:
-                sales_item = SalesItem(**to_entity_dict(input_sales_item))
-                sales_item.createdAtTimestampInMs = (
-                    time.time_ns() / 1_000_000
-                )
-                db_session.add(sales_item)
+                db_sales_item = DbSalesItem.create_from(sales_item)
+                db_session.add(db_sales_item)
                 db_session.commit()
-                db_session.refresh(sales_item)
-                return sales_item
         except SQLAlchemyError as error:
             raise DatabaseError(error)
 
     def find_all(self) -> list[SalesItem]:
         try:
             with self.__SessionLocal() as db_session:
-                return db_session.scalars(select(SalesItem)).unique().all()
+                db_sales_items = (
+                    db_session.scalars(select(DbSalesItem)).unique().all()
+                )
+
+                return [
+                    db_sales_item.to_domain_entity()
+                    for db_sales_item in db_sales_items
+                ]
         except SQLAlchemyError as error:
             raise DatabaseError(error)
 
     def find(self, id_: str) -> SalesItem | None:
         try:
             with self.__SessionLocal() as db_session:
-                return db_session.get(SalesItem, id_)
+                db_sales_item = db_session.get(DbSalesItem, id_)
+
+                return (
+                    None
+                    if db_sales_item is None
+                    else db_sales_item.to_domain_entity()
+                )
         except SQLAlchemyError as error:
             raise DatabaseError(error)
 
-    def update(self, id_: str, sales_item_update: InputSalesItem) -> None:
+    def update(self, sales_item: SalesItem) -> None:
         try:
             with self.__SessionLocal() as db_session:
-                sales_item = db_session.get(SalesItem, id_)
-
-                if sales_item is None:
-                    raise EntityNotFoundError('Sales item', id_)
-
-                new_sales_item = SalesItem(
-                    **to_entity_dict(sales_item_update)
-                )
-
-                sales_item.name = new_sales_item.name
-                sales_item.priceInCents = new_sales_item.priceInCents
-                sales_item.images = new_sales_item.images
+                db_sales_item = db_session.get(DbSalesItem, sales_item.id)
+                db_sales_item.name = sales_item.name
+                db_sales_item.priceInCents = sales_item.priceInCents
+                db_sales_item.images = sales_item.images
                 db_session.commit()
         except SQLAlchemyError as error:
             raise DatabaseError(error)
@@ -77,6 +74,7 @@ class OrmSalesItemRepository(SalesItemRepository):
         try:
             with self.__SessionLocal() as db_session:
                 sales_item = db_session.get(SalesItem, id_)
+
                 if sales_item is not None:
                     db_session.delete(sales_item)
                     db_session.commit()

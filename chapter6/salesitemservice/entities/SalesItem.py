@@ -1,3 +1,4 @@
+import time
 from uuid import uuid4
 
 from .SalesItemImage import SalesItemImage
@@ -13,6 +14,7 @@ class SalesItem:
         # languages used
         self.__id = kwargs.get('id') or str(uuid4())
 
+        self.__created_at_timestamp_in_ms = round(time.time() * 1000)
         self.__name = kwargs['name']
         self.__price_in_cents = kwargs['priceInCents']
         self.__images = [SalesItemImage(**image) for image in kwargs['images']]
@@ -32,6 +34,10 @@ class SalesItem:
     @property
     def id(self) -> str:
         return self.__id
+
+    @property
+    def createdAtTimestampInMs(self) -> int:
+        return self.__created_at_timestamp_in_ms
 
     @property
     def name(self) -> str:
