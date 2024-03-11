@@ -1,0 +1,25 @@
+.contactChatView {
+  width: 420px;
+}
+
+.contactChatView ul {
+  padding-inline-start: 0;
+  list-style-type: none;
+}
+
+.contactChatView li {
+  margin-top: 15px;
+  width: fit-content;
+  max-width: 180px;
+  padding: 10px;
+  border: 1px solid #888;
+  border-radius: 20px;
+}
+
+.contactChatView li.received {
+  margin-right: auto;
+}
+
+.contactChatView li.sent {
+  margin-left: auto;
+}
