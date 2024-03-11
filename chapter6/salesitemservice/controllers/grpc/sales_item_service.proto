@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+option objc_class_prefix = "SIS";
+
+package salesitemservice;
+
+service SalesItemService {
+  rpc createSalesItem (InputSalesItem) returns (OutputSalesItem) {}
+  rpc getSalesItems (GetSalesItemsArg) returns (OutputSalesItems) {}
+  rpc getSalesItem (Id) returns (OutputSalesItem) {}
+  rpc updateSalesItem (SalesItemUpdate) returns (Nothing) {}
+  rpc deleteSalesItem (Id) returns (Nothing) {}
+}
+
+message GetSalesItemsArg {
+  optional string sortByField = 1;
+  optional string sortDirection = 2;
+  optional uint64 offset = 3;
+  optional uint64 limit = 4;
+}
+
+message Nothing {}
+
+message Image {
+  uint64 id = 1;
+  uint64 rank = 2;
+  string url = 3;
+}
+
+message InputSalesItem {
+  string name = 1;
+  uint64 priceInCents = 2;
+  repeated Image images = 3;
+}
+
+message SalesItemUpdate {
+  string id = 1;
+  string name = 2;
+  uint64 priceInCents = 3;
+  repeated Image images = 4;
+}
+
+message OutputSalesItem {
+  string id = 1;
+  uint64 createdAtTimestampInMs = 2;
+  string name = 3;
+  uint64 priceInCents = 4;
+  repeated Image images = 5;
+}
+
+message Id {
+  string id = 1;
+}
+
+message OutputSalesItems {
+  repeated OutputSalesItem salesItems = 1;
+}
+
+message ErrorDetails {
+    optional string code = 1;
+    optional string description = 2;
+    optional string stackTrace = 3;
+}
