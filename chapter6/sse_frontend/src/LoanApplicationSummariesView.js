@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-export default function LoanAppSummaries() {
+export default function LoanApplicationSummariesView() {
   const [ loanAppSummaries, setLoanAppSummaries ] = useState([]);
 
   // Define an effect to be executed on component mount
@@ -9,7 +9,7 @@ export default function LoanAppSummaries() {
     // Hardcoded dev environment URL is used here for demonstration
     // purposes
     const eventSource =
-      new EventSource('http://localhost:8000/subscribe-to-loan-app-summaries');
+        new EventSource('http://localhost:8000/subscribe-to-loan-app-summaries');
 
     // Listen to server sent events and add a new
     // loan application summary to the head of
@@ -37,10 +37,10 @@ export default function LoanAppSummaries() {
 
   // Render loan application summary list items
   const loanAppSummaryListItems =
-    loanAppSummaries.map(({ ... }) =>
-       (<li key={key here...}>render here...</li>));
+      loanAppSummaries.map(({ ... }) =>
+          (<li key={key here...}>render here...</li>));
 
   return (
-    <ul>{loanAppSummaryListItems}</ul>
+      <ul>{loanAppSummaryListItems}</ul>
   );
 }
