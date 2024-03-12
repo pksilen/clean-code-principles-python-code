@@ -1,0 +1,49 @@
+POST http://localhost:8000/sales-items
+Content-Type: application/json
+
+{
+  "name": "Sales item 1",
+  "priceInCents": 1000,
+  "images": [
+    {
+      "rank": 1,
+      "url": "http://www.something.com/url1"
+    },
+    {
+      "rank": 2,
+      "url": "http://www.something.com/url2"
+    }
+  ]
+}
+
+###
+GET http://localhost:8000/sales-items
+Accept: application/json
+
+###
+GET http://localhost:8000/sales-items/3771c417-2b79-4e5d-996b-1d0c5872fd3a
+Accept: application/json
+
+###
+PUT http://localhost:8000/sales-items/3771c417-2b79-4e5d-996b-1d0c5872fd3a
+Content-Type: application/json
+
+{
+  "name": "Sales item 2",
+  "priceInCents": 2000,
+  "images": [
+    {
+      "rank": 3,
+      "url": "http://www.something.com/url10"
+    },
+    {
+      "rank": 4,
+      "url": "http://www.something.com/url11"
+    }
+  ]
+}
+
+###
+DELETE http://localhost:8000/sales-items/dafa099d-ee55-42b5-9b54-58941c94f880
+
+###

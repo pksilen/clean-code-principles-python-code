@@ -1,0 +1,70 @@
+GRAPHQL http://localhost:8000/graphql
+
+mutation createSalesItem {
+    createSalesItem(inputSalesItem: {name: "Sales item 1", priceInCents: 1000, images: [{rank: 1, url: "http://www.something.com/url1" }, {rank: 2, url: "http://www.something.com/url2" }]}){
+    id
+    createdAtTimestampInMs
+    name
+    priceInCents
+    images {
+      id
+      rank
+      url
+    }
+  }
+}
+
+###
+
+GRAPHQL http://localhost:8000/graphql
+
+query salesItems {
+  salesItems {
+    id
+    createdAtTimestampInMs
+    name
+    priceInCents
+    images {
+      id
+      rank
+      url
+    }
+  }
+}
+
+###
+GRAPHQL http://localhost:8000/graphql
+
+query salesItem {
+  salesItem(id: "2b696392-adcd-48ca-81ea-9e2b79e175a2") {
+    id
+    createdAtTimestampInMs
+    name
+    priceInCents
+    images {
+      id
+      rank
+      url
+    }
+  }
+}
+
+###
+GRAPHQL http://localhost:8000/graphql
+
+mutation updateSalesItem {
+  updateSalesItem(id: "2b696392-adcd-48ca-81ea-9e2b79e175a2", inputSalesItem: {name: "Sales item 2", priceInCents: 2000, images: [{rank: 3, url: "http://www.something.com/url3" }, {rank: 4, url: "http://www.something.com/url4" }]}){
+    id
+  }
+}
+
+###
+GRAPHQL http://localhost:8000/graphql
+
+mutation deleteSalesItem {
+  deleteSalesItem(id: "2b696392-adcd-48ca-81ea-9e2b79e175a2") {
+    id
+  }
+}
+
+###
