@@ -17,7 +17,7 @@ from ..grpc.sales_item_service_pb2 import (
 )
 from ..grpc.sales_item_service_pb2_grpc import SalesItemServiceServicer
 from ...common.utils.utils import get_stack_trace
-from ...dtos.InputSalesItem import InputSalesItem as PydanticInputSalesItem
+from ...dtos.InputSalesItem import InputSalesItem as InputSalesItemDto
 from ...errors.SalesItemServiceError import SalesItemServiceError
 from ...service.SalesItemService import SalesItemService
 
@@ -35,16 +35,17 @@ def create_status_from(error: Exception) -> status_pb2.Status:
 
     if isinstance(error, SalesItemServiceError):
         grpc_status_code = map_http_status_code_to_grpc_status_code(error)
-        message = error.message
+        error_dict = error.to_dict()
+        message = error_dict['errorMessage']
 
         detail.Pack(
             ErrorDetails(
-                code=error.code,
-                description=error.description,
+                code=error_dict['errorCode'],
+                description=error_dict['errorDescription'],
                 # get_stack_trace returns stack trace only
                 # when environment is not production
                 # otherwise it returns None
-                stackTrace=get_stack_trace(error.cause),
+                stackTrace=error_dict['stackTrace'],
             )
         )
     elif isinstance(error, ValidationError):
@@ -80,7 +81,7 @@ class GrpcSalesItemController(SalesItemServiceServicer):
         try:
             input_sales_item_dict = proto_to_dict(input_sales_item)
 
-            input_sales_item = PydanticInputSalesItem.parse_obj(
+            input_sales_item = InputSalesItemDto.model_validate(
                 input_sales_item_dict
             )
 
@@ -91,9 +92,7 @@ class GrpcSalesItemController(SalesItemServiceServicer):
             )
 
             output_sales_item = OutputSalesItem()
-
             json_format.ParseDict(output_sales_item_dict, output_sales_item)
-
             return output_sales_item
         except Exception as error:
             self.__abort_with(error, context)
@@ -125,9 +124,7 @@ class GrpcSalesItemController(SalesItemServiceServicer):
             ).dict()
 
             output_sales_item = OutputSalesItem()
-
             json_format.ParseDict(output_sales_item_dict, output_sales_item)
-
             return output_sales_item
         except Exception as error:
             self.__abort_with(error, context)
@@ -137,12 +134,11 @@ class GrpcSalesItemController(SalesItemServiceServicer):
             id_ = sales_item_update.id
             sales_item_update_dict = proto_to_dict(sales_item_update)
 
-            sales_item_update = PydanticInputSalesItem.parse_obj(
+            sales_item_update = InputSalesItemDto.model_validate(
                 sales_item_update_dict
             )
 
             self.__sales_item_service.update_sales_item(id_, sales_item_update)
-
             return Nothing()
         except Exception as error:
             self.__abort_with(error, context)

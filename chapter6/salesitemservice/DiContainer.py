@@ -41,7 +41,7 @@ class DiContainer(containers.DeclarativeContainer):
 
     if os.environ['CONTROLLER_TYPE'] == 'rest':
         order_controller = providers.Singleton(RestSalesItemController)
-    else:
+    elif os.environ['CONTROLLER_TYPE'] == 'graphql':
         order_controller = providers.Singleton(
             StrawberryGraphQlSalesItemController
         )

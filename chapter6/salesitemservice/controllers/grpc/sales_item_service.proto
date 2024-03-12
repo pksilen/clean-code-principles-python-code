@@ -21,23 +21,28 @@ message GetSalesItemsArg {
 
 message Nothing {}
 
-message Image {
-  uint64 id = 1;
-  uint64 rank = 2;
-  string url = 3;
+message InputSalesItemImage {
+  uint64 rank = 1;
+  string url = 2;
 }
 
 message InputSalesItem {
   string name = 1;
   uint64 priceInCents = 2;
-  repeated Image images = 3;
+  repeated InputSalesItemImage images = 3;
 }
 
 message SalesItemUpdate {
   string id = 1;
   string name = 2;
   uint64 priceInCents = 3;
-  repeated Image images = 4;
+  repeated InputSalesItemImage images = 4;
+}
+
+message OutputSalesItemImage {
+  string id = 1;
+  uint64 rank = 2;
+  string url = 3;
 }
 
 message OutputSalesItem {
@@ -45,7 +50,7 @@ message OutputSalesItem {
   uint64 createdAtTimestampInMs = 2;
   string name = 3;
   uint64 priceInCents = 4;
-  repeated Image images = 5;
+  repeated OutputSalesItemImage images = 5;
 }
 
 message Id {

@@ -1,33 +1,31 @@
+import grpc
 from grpc_status import rpc_status
 
-import grpc
-
-from .grpc.sales_item_service_pb2 import (
+from .controllers.grpc.sales_item_service_pb2 import (
     ErrorDetails,
     GetSalesItemsArg,
     Id,
-    Image,
+    InputSalesItemImage,
     InputSalesItem,
     SalesItemUpdate,
 )
-from .grpc.sales_item_service_pb2_grpc import SalesItemServiceStub
+from .controllers.grpc.sales_item_service_pb2_grpc import SalesItemServiceStub
 
 
 def run():
     with grpc.insecure_channel('localhost:50051') as channel:
         sales_item_service = SalesItemServiceStub(channel)
+
         input_sales_item = InputSalesItem(
             name='Test',
             priceInCents=950,
             images=[
-                Image(id=11, rank=1, url='http://server.com/images/1')
+                InputSalesItemImage(rank=1, url='http://server.com/images/1')
             ],
         )
 
         try:
-            sales_item = sales_item_service.createSalesItem(
-                input_sales_item
-            )
+            sales_item = sales_item_service.createSalesItem(input_sales_item)
 
             id_ = sales_item.id
             print(f'Sales item with id {id_} created')
@@ -46,8 +44,8 @@ def run():
                     name='Test 2',
                     priceInCents=1950,
                     images=[
-                        Image(
-                            id=11, rank=1, url='http://server.com/images/1'
+                        InputSalesItemImage(
+                            rank=1, url='http://server.com/images/1'
                         )
                     ],
                 )
@@ -66,9 +64,7 @@ def run():
                     detail.Unpack(error_details)
                     print(f'Error code: {error_details.code}')
                     print(f'Error message: {status.message}')
-                    print(
-                        f'Error description: {error_details.description}'
-                    )
+                    print(f'Error description: {error_details.description}')
             else:
                 print(str(error))
 
