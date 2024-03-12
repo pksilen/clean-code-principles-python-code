@@ -1,9 +1,10 @@
 import os
 
-from ChatMsgBrokerAdminClient import ChatMsgBrokerAdminClient
 from confluent_kafka import KafkaError, KafkaException
 from confluent_kafka.admin import AdminClient
 from confluent_kafka.cimpl import NewTopic
+
+from .ChatMsgBrokerAdminClient import ChatMsgBrokerAdminClient
 
 
 class KafkaChatMsgBrokerAdminClient(ChatMsgBrokerAdminClient):
@@ -19,8 +20,8 @@ class KafkaChatMsgBrokerAdminClient(ChatMsgBrokerAdminClient):
         topic = NewTopic(name)
 
         try:
-            topic_name_to_creation_dict = (
-                self.__admin_client.create_topics([topic])
+            topic_name_to_creation_dict = self.__admin_client.create_topics(
+                [topic]
             )
             topic_name_to_creation_dict[name].result()
         except KafkaException as error:

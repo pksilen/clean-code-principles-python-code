@@ -1,7 +1,8 @@
 import os
 
-from ChatMsgBrokerProducer import ChatMsgBrokerProducer
 from confluent_kafka import KafkaException, Producer
+
+from .ChatMsgBrokerProducer import ChatMsgBrokerProducer
 
 
 class KafkaChatMsgBrokerProducer(ChatMsgBrokerProducer):

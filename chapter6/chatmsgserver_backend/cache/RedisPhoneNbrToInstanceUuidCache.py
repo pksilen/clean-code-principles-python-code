@@ -1,6 +1,6 @@
 from redis import Redis, RedisError
 
-from PhoneNbrToInstanceUuidCache import PhoneNbrToInstanceUuidCache
+from .PhoneNbrToInstanceUuidCache import PhoneNbrToInstanceUuidCache
 
 
 class RedisPhoneNbrToInstanceUuidCache(PhoneNbrToInstanceUuidCache):

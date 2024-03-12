@@ -3,7 +3,7 @@ from typing import Final
 
 from fastapi import WebSocketDisconnect
 
-from ChatMsgServer import ChatMsgServer
+from .ChatMsgServer import ChatMsgServer
 from ..broker.producer.ChatMsgBrokerProducer import ChatMsgBrokerProducer
 from ..broker.producer.KafkaChatMsgBrokerProducer import (
     KafkaChatMsgBrokerProducer,

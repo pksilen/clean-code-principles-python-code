@@ -1,7 +1,8 @@
 from typing import Any
 
-from Connection import Connection
 from fastapi import WebSocket, WebSocketException
+
+from .Connection import Connection
 
 
 class WebSocketConnection(Connection):

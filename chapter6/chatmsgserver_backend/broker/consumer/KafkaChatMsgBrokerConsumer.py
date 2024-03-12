@@ -3,7 +3,7 @@ import os
 
 from confluent_kafka import Consumer, KafkaException
 
-from ChatMsgBrokerConsumer import ChatMsgBrokerConsumer
+from .ChatMsgBrokerConsumer import ChatMsgBrokerConsumer
 from ...connection.Connection import Connection
 from ...connection.phone_nbr_to_conn_map import phone_nbr_to_conn_map
 
@@ -27,24 +27,22 @@ class KafkaChatMsgBrokerConsumer(ChatMsgBrokerConsumer):
 
         while self.__is_running:
             try:
-                messages = self.__consumer.poll(timeout=1)
+                message = self.__consumer.poll(timeout=1)
 
-                if messages is None:
+                if message is None:
                     continue
+                elif message.error():
+                    raise KafkaException(message.error())
+                else:
+                    chat_message_json = message.value()
+                    chat_message = json.loads(chat_message_json)
 
-                for message in messages:
-                    if message.error():
-                        raise KafkaException(message.error())
-                    else:
-                        chat_message_json = message.value()
-                        chat_message = json.loads(chat_message_json)
+                    recipient_conn = phone_nbr_to_conn_map.get(
+                        chat_message.get('recipientPhoneNbr')
+                    )
 
-                        recipient_conn = phone_nbr_to_conn_map.get(
-                            chat_message.get('recipientPhoneNbr')
-                        )
-
-                        if recipient_conn:
-                            recipient_conn.try_send_text(chat_message_json)
+                    if recipient_conn:
+                        recipient_conn.try_send_text(chat_message_json)
             except KafkaException:
                 # Handle error ...
                 pass
