@@ -1,3 +1,4 @@
+import asyncio
 import sys
 from threading import Thread
 from uuid import uuid4
@@ -25,12 +26,16 @@ except KafkaChatMsgBrokerAdminClient.CreateTopicError:
 # Create and start a Kafka consumer to consume and send
 # chat messages for recipients that are connected to
 # this microservice instance
+
+
 chat_msg_broker_consumer = KafkaChatMsgBrokerConsumer(topic=instance_uuid)
 
-chat_msg_consumer_thread = Thread(
-    target=chat_msg_broker_consumer.consume_chat_msgs
-)
 
+def consume_chat_msgs_from_broker():
+    asyncio.run(chat_msg_broker_consumer.consume_chat_msgs())
+
+
+chat_msg_consumer_thread = Thread(target=consume_chat_msgs_from_broker)
 chat_msg_consumer_thread.start()
 
 app = FastAPI()

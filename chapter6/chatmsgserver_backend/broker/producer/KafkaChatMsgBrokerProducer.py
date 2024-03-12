@@ -21,7 +21,7 @@ class KafkaChatMsgBrokerProducer(ChatMsgBrokerProducer):
 
         try:
             self.__producer.produce(
-                topic, chat_message_json, on_delivery=handle_error
+                topic, value=chat_message_json, on_delivery=handle_error
             )
 
             self.__producer.poll()

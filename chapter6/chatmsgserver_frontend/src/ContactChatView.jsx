@@ -1,21 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { connect } from "react-redux";
 import store from './store';
 
 function ContactChatView({
   userPhoneNbr,
   contactPhoneNbr,
-  chatMessages,
-  fetchLatestChatMessages
+  chatMessages
 }) {
   const inputElement = useRef(null);
-
-  useEffect(() => {
-    fetchLatestChatMessages(userPhoneNbr, contactPhoneNbr);
-  }, [contactPhoneNbr,
-      fetchLatestChatMessages,
-      userPhoneNbr]
-  );
 
   function sendChatMessage() {
     if (inputElement?.current.value) {

@@ -22,7 +22,7 @@ class KafkaChatMsgBrokerConsumer(ChatMsgBrokerConsumer):
         self.__consumer = Consumer(config)
         self.__is_running = True
 
-    def consume_chat_msgs(self) -> None:
+    async def consume_chat_msgs(self) -> None:
         self.__consumer.subscribe([self.__topic])
 
         while self.__is_running:
@@ -34,7 +34,7 @@ class KafkaChatMsgBrokerConsumer(ChatMsgBrokerConsumer):
                 elif message.error():
                     raise KafkaException(message.error())
                 else:
-                    chat_message_json = message.value()
+                    chat_message_json = message.value().decode('utf-8')
                     chat_message = json.loads(chat_message_json)
 
                     recipient_conn = phone_nbr_to_conn_map.get(
@@ -42,7 +42,7 @@ class KafkaChatMsgBrokerConsumer(ChatMsgBrokerConsumer):
                     )
 
                     if recipient_conn:
-                        recipient_conn.try_send_text(chat_message_json)
+                        await recipient_conn.try_send_text(chat_message_json)
             except KafkaException:
                 # Handle error ...
                 pass
