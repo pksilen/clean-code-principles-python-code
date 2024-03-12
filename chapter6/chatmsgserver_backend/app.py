@@ -3,10 +3,15 @@ from threading import Thread
 from uuid import uuid4
 
 from fastapi import FastAPI, WebSocket
-from KafkaChatMsgBrokerAdminClient import KafkaChatMsgBrokerAdminClient
-from KafkaChatMsgBrokerConsumer import KafkaChatMsgBrokerConsumer
-from WebSocketChatMsgServer import WebSocketChatMsgServer
-from WebSocketConnection import WebSocketConnection
+
+from .broker.adminclient.KafkaChatMsgBrokerAdminClient import (
+    KafkaChatMsgBrokerAdminClient,
+)
+from .broker.consumer.KafkaChatMsgBrokerConsumer import (
+    KafkaChatMsgBrokerConsumer,
+)
+from .connection.WebSocketConnection import WebSocketConnection
+from .server.WebSocketChatMsgServer import WebSocketChatMsgServer
 
 instance_uuid = str(uuid4())
 
