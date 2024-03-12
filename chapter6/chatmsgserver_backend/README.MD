@@ -30,7 +30,7 @@ docker-compose up
 
 ## Start Chat Messaging Server
 ```bash
-
+export KAFKA_BROKERS=localhost:9092
 cd ..
 uvicorn chatmsgserver_backend.app:app
 ```
