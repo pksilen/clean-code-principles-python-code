@@ -1,13 +1,8 @@
-import json
 from typing import Final
 
 from fastapi import WebSocketDisconnect
 
 from .ChatMsgServer import ChatMsgServer
-from ..broker.producer.ChatMsgBrokerProducer import ChatMsgBrokerProducer
-from ..broker.producer.KafkaChatMsgBrokerProducer import (
-    KafkaChatMsgBrokerProducer,
-)
 from ..cache.PhoneNbrToInstanceUuidCache import PhoneNbrToInstanceUuidCache
 from ..cache.RedisPhoneNbrToInstanceUuidCache import (
     RedisPhoneNbrToInstanceUuidCache,
@@ -15,13 +10,15 @@ from ..cache.RedisPhoneNbrToInstanceUuidCache import (
 from ..cache.redis_client import redis_client
 from ..connection.Connection import Connection
 from ..connection.phone_nbr_to_conn_map import phone_nbr_to_conn_map
+from ..error.ChatMsgServerError import ChatMsgServerError
+from ..service.ChatMsgService import ChatMsgService
 
 
 class WebSocketChatMsgServer(ChatMsgServer):
-    def __init__(self, instance_uuid: str):
+    def __init__(self, instance_uuid: str, chat_msg_service: ChatMsgService):
         self.__instance_uuid: Final = instance_uuid
+        self.__chat_msg_service = chat_msg_service
         self.__conn_to_phone_nbr_map: Final[dict[Connection, str]] = {}
-        self.__chat_msg_broker_producer: Final = KafkaChatMsgBrokerProducer()
         self.__cache: Final = RedisPhoneNbrToInstanceUuidCache(redis_client)
 
     async def handle(self, connection: Connection, phone_number: str) -> None:
@@ -36,24 +33,10 @@ class WebSocketChatMsgServer(ChatMsgServer):
                     str, str
                 ] = await connection.try_receive_json()
 
-                # Validate chat_message ...
-                # Store chat message permanently using another API ...
-                recipient_phone_nbr = chat_message.get('recipientPhoneNbr')
-
-                recipient_instance_uuid = self.__cache.retrieve_instance_uuid(
-                    recipient_phone_nbr
-                )
-
-                await self.__try_send(chat_message, recipient_instance_uuid)
+                await self.__chat_msg_service.try_send(chat_message)
         except WebSocketDisconnect:
             self.__disconnect(connection)
-        except PhoneNbrToInstanceUuidCache.Error:
-            # Handle error ...
-            pass
-        except Connection.Error:
-            # Handle error ...
-            pass
-        except ChatMsgBrokerProducer.Error:
+        except ChatMsgServerError:
             # Handle error ...
             pass
 
@@ -63,31 +46,6 @@ class WebSocketChatMsgServer(ChatMsgServer):
                 connection.try_close()
             except Connection.Error:
                 pass
-
-        self.__chat_msg_broker_producer.close()
-
-    async def __try_send(
-        self,
-        chat_message: dict[str, str],
-        recipient_instance_uuid: str | None,
-    ) -> None:
-        if recipient_instance_uuid == self.__instance_uuid:
-            # Recipient has active connection on
-            # the same server instance as sender
-            recipient_conn = phone_nbr_to_conn_map.get(
-                chat_message.get('recipientPhoneNbr')
-            )
-
-            if recipient_conn:
-                await recipient_conn.try_send_json(chat_message)
-        elif recipient_instance_uuid:
-            # Recipient has active connection on different
-            # server instance compared to sender
-            chat_message_json = json.dumps(chat_message)
-
-            self.__chat_msg_broker_producer.try_produce(
-                chat_message_json, topic=recipient_instance_uuid
-            )
 
     def __disconnect(self, connection: Connection) -> None:
         phone_number = self.__conn_to_phone_nbr_map.get(connection)

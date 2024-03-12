@@ -13,6 +13,7 @@ from .broker.consumer.KafkaChatMsgBrokerConsumer import (
 )
 from .connection.WebSocketConnection import WebSocketConnection
 from .server.WebSocketChatMsgServer import WebSocketChatMsgServer
+from .service.ChatMsgServiceImpl import ChatMsgServiceImpl
 
 instance_uuid = str(uuid4())
 
@@ -27,8 +28,11 @@ except KafkaChatMsgBrokerAdminClient.CreateTopicError:
 # chat messages for recipients that are connected to
 # this microservice instance
 
+chat_msg_service = ChatMsgServiceImpl(instance_uuid)
 
-chat_msg_broker_consumer = KafkaChatMsgBrokerConsumer(topic=instance_uuid)
+chat_msg_broker_consumer = KafkaChatMsgBrokerConsumer(
+    chat_msg_service, topic=instance_uuid
+)
 
 
 def consume_chat_msgs_from_broker():
@@ -39,7 +43,7 @@ chat_msg_consumer_thread = Thread(target=consume_chat_msgs_from_broker)
 chat_msg_consumer_thread.start()
 
 app = FastAPI()
-chat_msg_server = WebSocketChatMsgServer(instance_uuid)
+chat_msg_server = WebSocketChatMsgServer(instance_uuid, chat_msg_service)
 
 
 @app.websocket('/chat-messaging-service/{phone_number}')
@@ -54,3 +58,4 @@ def shutdown_event():
     chat_msg_consumer_thread.join()
     chat_msg_broker_consumer.close()
     chat_msg_server.close()
+    chat_msg_service.close()

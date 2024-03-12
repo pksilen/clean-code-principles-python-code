@@ -5,11 +5,12 @@ from confluent_kafka import Consumer, KafkaException
 
 from .ChatMsgBrokerConsumer import ChatMsgBrokerConsumer
 from ...connection.Connection import Connection
-from ...connection.phone_nbr_to_conn_map import phone_nbr_to_conn_map
+from ...service.ChatMsgService import ChatMsgService
 
 
 class KafkaChatMsgBrokerConsumer(ChatMsgBrokerConsumer):
-    def __init__(self, topic: str):
+    def __init__(self, chat_msg_service: ChatMsgService, topic: str):
+        self._chat_msg_service = chat_msg_service
         self.__topic = topic
 
         config = {
@@ -36,13 +37,7 @@ class KafkaChatMsgBrokerConsumer(ChatMsgBrokerConsumer):
                 else:
                     chat_message_json = message.value().decode('utf-8')
                     chat_message = json.loads(chat_message_json)
-
-                    recipient_conn = phone_nbr_to_conn_map.get(
-                        chat_message.get('recipientPhoneNbr')
-                    )
-
-                    if recipient_conn:
-                        await recipient_conn.try_send_text(chat_message_json)
+                    await self._chat_msg_service.try_send(chat_message)
             except KafkaException:
                 # Handle error ...
                 pass

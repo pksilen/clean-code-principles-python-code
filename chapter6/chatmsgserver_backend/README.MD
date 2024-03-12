@@ -35,6 +35,3 @@ cd ..
 uvicorn chatmsgserver_backend.app:app
 ```
 
-Sample HTTP requests are available in scratches/orderservice_rest.http and 
-scratches/orderservice_graphql.http files.
-You can use these requests with the PyCharm Professional's HTTP client.
