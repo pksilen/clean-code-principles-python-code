@@ -8,7 +8,7 @@ import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import authorizationService from "@/authService";
 import { useAuthInfoStore } from "@/stores/authInfoStore";
-import HeaderView from "@/HeaderView.vue";
+import HeaderView from "@/views/HeaderView.vue";
 import tryMakeHttpRequest from "@/tryMakeHttpRequest";
 
 const router = useRouter();

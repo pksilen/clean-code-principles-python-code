@@ -1,14 +1,14 @@
 import pkceChallenge from "pkce-challenge";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import tryMakeHttpRequest from "@/tryMakeHttpRequest";
-import type { useAuthInfoStore } from "@/stores/authInfoStore";
+import type {useAuthInfoStore} from "@/authInfoStore";
 
-interface AuthorizedUserInfo {
+/*interface AuthorizedUserInfo {
   readonly userName: string;
   readonly firstName: string;
   readonly lastName: string;
   readonly email: string;
-}
+}*/
 
 export default class AuthorizationService {
   constructor(
@@ -36,20 +36,19 @@ export default class AuthorizationService {
 
     // Generate a PKCE challenge and store
     // the code verifier in service worker
-    const challenge = pkceChallenge(128);
+    const challenge = await pkceChallenge(128);
+
     navigator.serviceWorker?.controller?.postMessage({
       key: "codeVerifier",
       value: challenge.code_verifier,
     });
 
-    const authUrl = await this.tryCreateAuthUrl(state, challenge);
-
     // Redirect the browser to authorization server's
     // authorization URL
-    location.href = authUrl;
+    location.href = await this.tryCreateAuthUrl(state, challenge);
   }
 
-  // Try get access, refresh and ID token from
+  // Try to get access, refresh and ID token from
   // the authorization server's token endpoint
   async tryGetTokens(
     authInfoStore: ReturnType<typeof useAuthInfoStore>
@@ -105,7 +104,7 @@ export default class AuthorizationService {
 
   private async tryCreateAuthUrl(
     state: string,
-    challenge: ReturnType<typeof pkceChallenge>
+    challenge: Awaited<ReturnType<typeof pkceChallenge>>
   ) {
     const oidcConfiguration = await this.getOidcConfiguration();
     let authUrl = oidcConfiguration.authorization_endpoint;
@@ -142,7 +141,7 @@ export default class AuthorizationService {
     idToken: any,
     authInfoStore: ReturnType<typeof useAuthInfoStore>
     ) {
-    const idTokenClaims: any = jwt_decode(idToken);
+    const idTokenClaims: any = jwtDecode(idToken);
 
     const authorizedUserInfo = {
       userName: idTokenClaims.preferred_username,

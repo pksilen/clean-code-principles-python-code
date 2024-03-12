@@ -1,6 +1,6 @@
 <template>
   <span>{{authInfoStore.firstName}}</span>
-  &nbsp;
+  &nbsp
   <button @click="logout">Logout</button>
 </template>
 

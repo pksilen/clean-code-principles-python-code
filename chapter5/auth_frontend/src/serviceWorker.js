@@ -1,6 +1,6 @@
 const allowedOrigins = [
   "http://localhost:8080", // IAM in dev environment
-  "http://localhost:3000", // API in dev environment
+  "http://localhost:8000", // API in dev environment
   "https://software-system-x.domain.com" // prod environment
 ];
 

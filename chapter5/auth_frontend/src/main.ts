@@ -2,14 +2,14 @@ import { setupFetch } from "@/tryMakeHttpRequest";
 setupFetch();
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import App from "@/App.vue";
+import AppView from "@/views/AppView.vue";
 import router from "@/router";
 
 if ("serviceWorker" in navigator) {
   await navigator.serviceWorker.register("/serviceWorker.js");
 }
 
-const app = createApp(App);
+const app = createApp(AppView);
 const pinia = createPinia();
 app.use(pinia);
 app.use(router);

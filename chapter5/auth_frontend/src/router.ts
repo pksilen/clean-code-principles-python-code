@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
-import AuthorizationCallback from "@/AuthorizationCallback.vue";
-import AuthorizationError from "@/AuthorizationError.vue";
-import HomeView from "@/HomeView.vue";
-import LoginView from "@/LoginView.vue";
+import AuthorizationCallback from "@/views/AuthCallbackView.vue";
+import AuthorizationError from "@/views/AuthErrorView.vue";
+import HomeView from "@/views/HomeView.vue";
+import LoginView from "@/views/LoginView.vue";
 
 const routes = [
   {
