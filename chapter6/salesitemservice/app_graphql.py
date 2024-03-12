@@ -20,7 +20,10 @@ def format_custom_error(graphql_error, debug: bool = False) -> dict[str, Any]:
 
     if isinstance(error, SalesItemServiceError):
         error_dict = error.to_dict(endpoint)
-        return {'message': error.message, 'extensions': error_dict}
+        return {
+            'message': error_dict['errorMessage'],
+            'extensions': error_dict,
+        }
 
     if isinstance(error, ValidationError):
         error_dict = create_error_dict(

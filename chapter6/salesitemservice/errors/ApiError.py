@@ -27,10 +27,6 @@ class ApiError(Exception):
     def status_code(self) -> int:
         return self.__status_code
 
-    @property
-    def message(self) -> int:
-        return self.__message
-
     def __str__(self):
         return json.dumps(self.to_dict())
 
