@@ -4,10 +4,6 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from InputOrder import InputOrder
 from jwt_authorizer import authorizer
-from order_service import order_service
-# OrderUpdate is a DTO that should not have user_id attribute,
-# because it cannot be changed
-from OrderUpdate import OrderUpdate
 
 app = FastAPI()
 
@@ -19,6 +15,7 @@ async def http_exception_handler(
 ):
     if error.status_code == 403:
         # Audit log an unauthorized request
+        pass
 
     # Increment 'HTTP request failures' counter by one
     # using the following metric labels: error.status_code, error.detail
@@ -29,6 +26,7 @@ async def http_exception_handler(
 async def get_sales_items():
     # No authentication/authorization required
     # Send sales items
+    pass
 
 @app.post('/messaging-service/messages')
 async def create_message(request: Request):
