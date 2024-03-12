@@ -7,7 +7,7 @@ class ChatMessagingService {
 
   constructor(dispatch, userPhoneNbr) {
     this.wsConnection =
-        new WebSocket(`ws://localhost:8080/chat-messaging-service/${userPhoneNbr}`);
+        new WebSocket(`ws://localhost:8000/chat-messaging-service/${userPhoneNbr}`);
 
     this.wsConnection.addEventListener('open', () => {
       this.connectionIsOpen = true;

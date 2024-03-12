@@ -6,7 +6,7 @@ import createChatMessagingService from "./ChatMessagingService";
 const { userPhoneNbr, contactPhoneNbr } =
   queryString.parse(window.location.search);
 
-export default function ChatApp() {
+export default function ChatAppView() {
   useEffect(() => {
     const chatMessagingService =
       createChatMessagingService(userPhoneNbr);
