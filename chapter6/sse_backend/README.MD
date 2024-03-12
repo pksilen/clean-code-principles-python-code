@@ -20,6 +20,6 @@ pip install -r requirements.txt
 
 ## Start Server
 ```bash
-python app.py
+uvicorn app:app
 ```
 

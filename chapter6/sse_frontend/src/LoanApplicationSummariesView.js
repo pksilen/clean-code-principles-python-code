@@ -37,8 +37,8 @@ export default function LoanApplicationSummariesView() {
 
   // Render loan application summary list items
   const loanAppSummaryListItems =
-      loanAppSummaries.map(({ ... }) =>
-          (<li key={key here...}>render here...</li>));
+      loanAppSummaries.map(({id}) =>
+          (<li key={id}>{id}</li>));
 
   return (
       <ul>{loanAppSummaryListItems}</ul>
