@@ -25,7 +25,10 @@ async def subscribe_to_loan_app_summaries(request: Request):
             if loan_app_summary:
                 yield json.dumps(loan_app_summary)
 
-    return EventSourceResponse(generate_loan_app_summary_events())
+    return EventSourceResponse(
+        generate_loan_app_summary_events(),
+        headers={'Access-Control-Allow-Origin': '*'},
+    )
 
 
 @app.post('/loan-app-summaries')

@@ -3,7 +3,6 @@
 ## Prerequisites
 
 - Python 3.11 or later
-- Docker
 
 ## Create Virtual Environment
 
