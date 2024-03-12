@@ -16,13 +16,19 @@ di_container = DiContainer()
 
 def format_custom_error(graphql_error, debug: bool = False) -> dict[str, Any]:
     error = unwrap_graphql_error(graphql_error)
+    endpoint = str(graphql_error.formatted['path'][0])
 
     if isinstance(error, SalesItemServiceError):
-        error_dict = error.to_dict()
+        error_dict = error.to_dict(endpoint)
         return {'message': error.message, 'extensions': error_dict}
 
     if isinstance(error, ValidationError):
-        error_dict = create_error_dict(error, 400, 'RequestValidationError')
+        error_dict = create_error_dict(
+            error,
+            400,
+            'RequestValidationError',
+            endpoint,
+        )
 
         return {
             'message': 'Request validation error',
@@ -30,7 +36,12 @@ def format_custom_error(graphql_error, debug: bool = False) -> dict[str, Any]:
         }
 
     if isinstance(error, Exception):
-        error_dict = create_error_dict(error, 500, 'UnspecifiedInternalError')
+        error_dict = create_error_dict(
+            error,
+            500,
+            'UnspecifiedInternalError',
+            endpoint,
+        )
 
         return {
             'message': 'Unspecified internal error',
