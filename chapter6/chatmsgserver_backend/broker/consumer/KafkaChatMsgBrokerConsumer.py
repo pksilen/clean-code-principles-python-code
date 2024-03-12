@@ -1,10 +1,11 @@
 import json
 import os
 
-from ChatMsgBrokerConsumer import ChatMsgBrokerConsumer
 from confluent_kafka import Consumer, KafkaException
-from Connection import Connection
-from phone_nbr_to_conn_map import phone_nbr_to_conn_map
+
+from ChatMsgBrokerConsumer import ChatMsgBrokerConsumer
+from ...connection.Connection import Connection
+from ...connection.phone_nbr_to_conn_map import phone_nbr_to_conn_map
 
 
 class KafkaChatMsgBrokerConsumer(ChatMsgBrokerConsumer):
@@ -46,8 +47,10 @@ class KafkaChatMsgBrokerConsumer(ChatMsgBrokerConsumer):
                             recipient_conn.try_send_text(chat_message_json)
             except KafkaException:
                 # Handle error ...
+                pass
             except Connection.Error:
                 # Handle error ...
+                pass
 
     def stop(self) -> None:
         self.__is_running = False

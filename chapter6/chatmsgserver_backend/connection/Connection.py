@@ -1,10 +1,10 @@
 from typing import Any, Protocol
 
-from WebSocketExampleError import WebSocketExampleError
+from ..error.ChatMsgServerError import ChatMsgServerError
 
 
 class Connection(Protocol):
-    class Error(WebSocketExampleError):
+    class Error(ChatMsgServerError):
         pass
 
     async def try_connect(self) -> None:

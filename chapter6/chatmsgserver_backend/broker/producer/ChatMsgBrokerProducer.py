@@ -1,10 +1,10 @@
 from typing import Protocol
 
-from WebSocketExampleError import WebSocketExampleError
+from ...error.ChatMsgServerError import ChatMsgServerError
 
 
 class ChatMsgBrokerProducer(Protocol):
-    class Error(WebSocketExampleError):
+    class Error(ChatMsgServerError):
         pass
 
     def try_produce(self, chat_message_json: str, topic: str):

@@ -1,15 +1,13 @@
 from typing import Protocol
 
-from WebSocketExampleError import WebSocketExampleError
+from ..error.ChatMsgServerError import ChatMsgServerError
 
 
 class PhoneNbrToInstanceUuidCache(Protocol):
-    class Error(WebSocketExampleError):
+    class Error(ChatMsgServerError):
         pass
 
-    def retrieve_instance_uuid(
-        self, phone_number: str | None
-    ) -> str | None:
+    def retrieve_instance_uuid(self, phone_number: str | None) -> str | None:
         pass
 
     def try_store(self, phone_number: str, instance_uuid: str) -> None:
