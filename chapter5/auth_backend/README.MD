@@ -25,10 +25,11 @@ docker-compose up
 
 ## Login to Keycloak
 
-Login at: localhost:8080
+Navigate to http://localhost:8080 and click *Administration Console*
 
-Username: user
-Password: bitnami
+Login with the following credentials
+- Username: user
+- Password: bitnami
 
 ## Create client
 
