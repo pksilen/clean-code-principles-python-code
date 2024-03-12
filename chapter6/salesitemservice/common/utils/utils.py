@@ -7,16 +7,20 @@ from typing import Any
 status_code_to_text = {400: 'Bad Request', 500: 'Internal Server Error'}
 
 
-def get_error_response(
-    error: Exception, status_code: int, error_code: str, request: any
+def create_error_dict(
+    error: Exception,
+    status_code: int,
+    error_code: str,
+    request: Any | None = None,
 ) -> dict[str, Any]:
     error_message = ' '.join(
         [word.lower() for word in re.findall('[A-Z][^A-Z]*', error_code)]
     )
+
     return {
         'statusCode': 400,
         'statusText': status_code_to_text[status_code],
-        'endpoint': f'{request.method} {request.url}',
+        'endpoint': f'{request.method} {request.url}' if request else None,
         'timestamp': datetime.now().isoformat(),
         'errorCode': error_code,
         'errorMessage': error_message,

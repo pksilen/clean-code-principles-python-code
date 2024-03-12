@@ -3,7 +3,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from .DiContainer import DiContainer
-from .common.utils.utils import get_error_response
+from .common.utils.utils import create_error_dict
 from .errors.SalesItemServiceError import SalesItemServiceError
 
 di_container = DiContainer()
@@ -42,7 +42,7 @@ def handle_request_validation_error(
 
     return JSONResponse(
         status_code=400,
-        content=get_error_response(
+        content=create_error_dict(
             error, 400, 'RequestValidationError', request
         ),
     )
@@ -59,7 +59,7 @@ def handle_unspecified_error(request: Request, error: Exception):
 
     return JSONResponse(
         status_code=500,
-        content=get_error_response(
+        content=create_error_dict(
             error, 500, 'UnspecifiedInternalError', request
         ),
     )
