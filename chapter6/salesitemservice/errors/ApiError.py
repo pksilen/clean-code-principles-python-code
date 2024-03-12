@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from typing import Final, Any
 
@@ -26,7 +27,10 @@ class ApiError(Exception):
     def status_code(self) -> int:
         return self.__status_code
 
-    def to_dict(self, endpoint: str | None) -> dict[str, Any]:
+    def __str__(self):
+        return json.dumps(self.to_dict())
+
+    def to_dict(self, endpoint: str | None = None) -> dict[str, Any]:
         return {
             'statusCode': self.__status_code,
             'statusText': self.__status_text,
