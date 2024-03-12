@@ -1,14 +1,16 @@
 from functools import wraps
 
+from ..authorizer.Authorizer import Authorizer
 
-def increment_counter(counter):
+
+def allow_for_user_roles(roles: list[str], authorizer: Authorizer):
     def decorate(handle_request):
         @wraps(handle_request)
         def wrapped_handle_request(*args, **kwargs):
-            method = kwargs['request'].method
-            url = str(kwargs['request'].url)
-            endpoint = '/'.join(url.split('/')[:4])
-            counter.increment(1, {'api_endpoint': f'{method} {endpoint}'})
+            authorizer.authorize_if_user_has_one_of_roles(
+                roles, kwargs['request']
+            )
+
             return handle_request(*args, **kwargs)
 
         return wrapped_handle_request
