@@ -1,0 +1,8 @@
+POST http://localhost:8000/loan-app-summaries
+Content-Type: application/json
+
+{
+  "id": "Loan app 1"
+}
+
+###

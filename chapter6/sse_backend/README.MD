@@ -22,3 +22,7 @@ pip install -r requirements.txt
 uvicorn app:app
 ```
 
+## Create Loan Application Summaries
+
+Sample HTTP request is available in scratches/sse.http file.
+You can use this request with the PyCharm Professional's HTTP client.

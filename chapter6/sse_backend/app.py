@@ -27,6 +27,7 @@ async def subscribe_to_loan_app_summaries(request: Request):
 
     return EventSourceResponse(
         generate_loan_app_summary_events(),
+        # Do not allow wildcard origin in production
         headers={'Access-Control-Allow-Origin': '*'},
     )
 
