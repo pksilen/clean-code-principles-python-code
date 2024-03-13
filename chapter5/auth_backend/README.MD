@@ -28,13 +28,13 @@ docker-compose up
 Navigate to http://localhost:8080 and click *Administration Console*
 
 Login with the following credentials
-- Username: user
-- Password: bitnami
+- Username: *user*
+- Password: *bitnami*
 
 ## Create client
 
 1. Create new client here http://localhost:8080/admin/master/console/#/master/clients by clicking *Create client* button
-2. For *Client ID*, supply 'app-x'
+2. For *Client ID*, supply *app-x*
 3. Press *Next* two times
 4. For *Valid redirect URIs*, supply http://127.0.0.1:5173/auth
 5. For *Valid post logout redirect URIs*, supply http://127.0.0.1:5173

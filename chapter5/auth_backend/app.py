@@ -1,15 +1,25 @@
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from ApiError import ApiError
 from InputOrder import InputOrder
 from jwt_authorizer import authorizer
 
 app = FastAPI()
 
-# Define a custom HTTPException handler that provides
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
+
+# Define a custom ApiError handler that provides
 # admin logging and metrics update
-@app.exception_handler(StarletteHTTPException)
+@app.exception_handler(ApiError)
 async def http_exception_handler(
     request: Request, error: StarletteHTTPException
 ):
@@ -26,48 +36,59 @@ async def http_exception_handler(
 
 
 @app.get('/sales-item-service/sales-items')
-async def get_sales_items():
+def get_sales_items():
     # No authentication/authorization required
     # Send sales items
     pass
 
 
 @app.post('/messaging-service/messages')
-async def create_message(request: Request):
-    authorizer.authorize(request)
+def create_message(request: Request):
+    authorizer.authorize(request.headers.get('Authorization'))
     # Authenticated user can create a message
+    print('Message created')
 
 
 @app.get('/order-service/orders/{id}')
-async def get_order(id: int, request: Request):
-    authorizer.authorize_for_user_own_resources_only(
-        id, order_service.get_order_by_id_and_user_id, request
+def get_order(id_: int, request: Request):
+    user_id_from_jwt = authorizer.getUserId(
+        request.headers.get('Authorization')
     )
 
-    # Get order identified with 'id'
-    # and having user id of JWT's owner
+    # Try to get order using 'user_id_from_jwt' as user id and 'id' as order id,
+    # e.g. order_service.get_order(id_, user_id_from_jwt)
+    # It is important to notice that when trying to retrieve
+    # the order from database, both 'id_' and 'user_id_from_jwt'
+    # are used as query filters
+    # If the user is not allowed to access the resource
+    # 404 Not Found is raised from the service method
+    # This approach has the security benefit of not revealing
+    # to an attacker whether an order with 'id_' exists or not
 
 
 @app.post('/order-service/orders')
-async def create_order(order: InputOrder, request: Request):
-    authorizer.authorize_for_self(order.user_id, request)
+def create_order(input_order: InputOrder, request: Request):
+    authorizer.authorize_for_self(
+        input_order.userId, request.headers.get('Authorization')
+    )
 
-    # Create an order for the user
+    # Create an order for the user.
     # User cannot create orders for other users
 
 
 @app.put('/order-service/orders/{id}')
-async def update_order(id: int, order: OrderUpdate, request: Request):
-    authorizer.authorize_for_user_own_resources_only(
-        id, order_service.get_order_by_id_and_user_id, request
+def update_order(id_: int, input_order: InputOrder, request: Request):
+    user_id_from_jwt = authorizer.getUserId(
+        request.headers.get('Authorization')
     )
 
-    # Update an order identified with 'id'
-    # and user id of JWT's owner
+    # order_service.update_order(id_, input_order, user_id_from_jwt)
 
 
 @app.delete('/order-service/orders/{id}')
-async def delete_order(id: int, request: Request):
-    authorizer.authorize_if_user_has_one_of_roles(['admin'], request)
+def delete_order(id: int, request: Request):
+    authorizer.authorize_if_user_has_one_of_roles(
+        ['admin'], request.headers.get('Authorization')
+    )
 
     # Only admin user can delete an order

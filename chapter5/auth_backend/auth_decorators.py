@@ -24,7 +24,9 @@ def allow_authorized_user(authorizer: Authorizer):
                     "Request handler must accept 'request' parameter"
                 )
             return await handle_request(*args, **kwargs)
+
         return wrapped_handle_request
+
     return decorate
 
 
@@ -37,31 +39,33 @@ def allow_for_self(authorizer: Authorizer):
                     kwargs['user_id']
                     if kwargs.get('user_id')
                     else kwargs[
-                        [
-                            key
-                            for key in kwargs.keys()
-                            if key.endswith('dto')
-                        ][0]
+                        [key for key in kwargs.keys() if key.endswith('dto')][
+                            0
+                        ]
                     ].user_id
                 )
                 authorizer.authorize_for_user_own_resources_only(
                     user_id, kwargs['request']
                 )
             except (AttributeError, IndexError, KeyError):
-                raise AuthDecorException("""
+                raise AuthDecorException(
+                    """
                     Request handler must accept 'request' parameter,
                     'user_id' integer parameter or DTO parameter
                     with name ending with 'dto'. DTO parameter
                     must have attribute 'user_id'
-                    """)
+                    """
+                )
             return await handle_request(*args, **kwargs)
+
         return wrapped_handle_request
+
     return decorate
 
 
 def allow_for_user_own_resources_only(
     authorizer: Authorizer,
-    get_entity_by_id_and_user_id: Callable[[int, int], Any]
+    get_entity_by_id_and_user_id: Callable[[int, int], Any],
 ):
     def decorate(handle_request):
         @wraps(handle_request)
@@ -70,14 +74,16 @@ def allow_for_user_own_resources_only(
                 authorizer.authorize_for_user_own_resources_only(
                     kwargs['id'],
                     get_entity_by_id_and_user_id,
-                    kwargs['request']
+                    kwargs['request'],
                 )
             except (KeyError):
                 raise AuthDecorException(
                     "Request handler must accept 'id' and 'request' parameters"
                 )
             return await handle_request(*args, **kwargs)
+
         return wrapped_handle_request
+
     return decorate
 
 
@@ -94,5 +100,7 @@ def allow_for_user_roles(roles: list[str], authorizer: Authorizer):
                     "Request handler must accept 'request' parameter"
                 )
             return await handle_request(*args, **kwargs)
+
         return wrapped_handle_request
+
     return decorate

@@ -6,7 +6,7 @@
 import { onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import authorizationService from "@/authService";
-import { useAuthInfoStore } from "@/stores/authInfoStore";
+import { useAuthInfoStore } from "@/authInfoStore";
 
 const { query } = useRoute();
 const router = useRouter();

@@ -1,13 +1,12 @@
 import os
 from typing import Any, Final
-from collections.abc import Callable
 
 import requests
-from Authorizer import Authorizer
 from benedict import benedict
-from fastapi import HTTPException, Request
 from jwt import PyJWKClient, PyJWKClientError, decode
 from jwt.exceptions import InvalidTokenError
+
+from Authorizer import Authorizer
 
 
 class __JwtAuthorizer(Authorizer):
@@ -26,8 +25,8 @@ class __JwtAuthorizer(Authorizer):
         # For example: http://localhost:8082/user-service/users
         self.__get_users_url = os.environ['GET_USERS_URL']
 
-    def authorize(self, request: Request) -> None:
-        self.__decode_jwt_claims(request.headers.get('Authorization'))
+    def authorize(self, auth_header: str | None) -> None:
+        self.__decode_jwt_claims(auth_header)
 
     # Authorize a user to create a resource for self
     # Checks that the supplied user_id is the same as the user_id
@@ -36,56 +35,34 @@ class __JwtAuthorizer(Authorizer):
     # you might need to use 'uid'
     # claim instead of 'sub' to get unique user id
     def authorize_for_self(
-        self, user_id: int, request: Request
+        self, user_id: str, auth_header: str | None
     ) -> None:
-        jwt_user_id = self.__get_jwt_user_id(request)
-        user_is_authorized = user_id == jwt_user_id
-        if not user_is_authorized:
-            raise HTTPException(status_code=403, detail='Unauthorized')
+        user_id_in_jwt = self.get_user_id(auth_header)
 
-    # Authorize a user for his/hers own resources only
-    # If an entity with given id and user_id combination
-    # is not found, auth error is raised
-    def authorize_for_user_own_resources_only(
-        self,
-        id: int,
-        get_entity_by_id_and_user_id: Callable[[int, int], Any],
-        request: Request
-    ) -> None:
-        jwt_user_id = self.__get_jwt_user_id(request)
-
-        try:
-            get_entity_by_id_and_user_id(id, jwt_user_id)
-        except HTTPException as error:
-            if error.status_code == 404:
-                raise HTTPException(status_code=403, detail='Unauthorized')
-            # Log error details
-            raise HTTPException(status_code=500, detail=self.IAM_ERROR)
+        if user_id != user_id_in_jwt:
+            raise self.UnauthorizedError()
 
     def authorize_if_user_has_one_of_roles(
-        self, allowed_roles: list[str], request: Request
+        self, allowed_roles: list[str], auth_header: str | None
     ) -> None:
-        claims = self.__decode_jwt_claims(
-            request.headers.get('Authorization')
-        )
+        claims = self.__decode_jwt_claims(auth_header)
 
         try:
             roles = benedict(claims)[self.__roles_claim_path]
         except KeyError as error:
             # Log error details
-            raise HTTPException(status_code=500, detail=self.IAM_ERROR)
+            raise self.IamError()
 
         user_is_authorized = any(
             [True for role in roles if role in allowed_roles]
         )
-        if not user_is_authorized:
-            raise HTTPException(status_code=403, detail='Unauthorized')
 
-    def __decode_jwt_claims(
-        self, auth_header: str | None
-    ) -> dict[str, Any]:
+        if not user_is_authorized:
+            raise self.UnauthorizedError()
+
+    def __decode_jwt_claims(self, auth_header: str | None) -> dict[str, Any]:
         if not auth_header:
-             raise HTTPException(status_code=401, detail='Unauthenticated')
+            raise self.UnauthenticatedError()
 
         try:
             if not self.__jwks_client:
@@ -100,36 +77,36 @@ class __JwtAuthorizer(Authorizer):
         except (
             requests.RequestException,
             KeyError,
-            PyJWKClientError
+            PyJWKClientError,
         ) as error:
             # Log error details
-            raise HTTPException(status_code=500, detail=self.IAM_ERROR)
+            raise self.IamError()
         except (IndexError, InvalidTokenError):
-            raise HTTPException(status_code=403, detail='Unauthorized')
+            raise self.UnauthorizedError()
 
         return jwt_claims
 
-    def __get_jwt_user_id(self, request: Request) -> int:
-        claims = self.__decode_jwt_claims(
-            request.headers.get('Authorization')
-        )
+    def get_user_id(self, auth_header: str | None) -> str:
+        claims = self.__decode_jwt_claims(auth_header)
 
         try:
             sub_claim = claims['sub']
+
             users_response = requests.get(
                 f'{self.__get_users_url}?sub={sub_claim}&fields=id'
             )
+
             users_response.raise_for_status()
             # Response JSON is expected in the form [{ "id": 12345 }]
             users = users_response.json()
         except (KeyError, requests.RequestException) as error:
             # Log error details
-            raise HTTPException(status_code=500, detail=self.IAM_ERROR)
+            raise self.IamError()
 
         try:
             return users[0].id
         except (IndexError, AttributeError):
-            raise HTTPException(status_code=403, detail='Unauthorized')
+            raise self.UnauthorizedError()
 
 
 authorizer = __JwtAuthorizer()
