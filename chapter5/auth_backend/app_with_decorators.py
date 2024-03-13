@@ -86,7 +86,6 @@ def update_order(
     authorization: Annotated[str | None, Header()] = None,
 ):
     user_id_from_jwt = authorizer.getUserId(authorization)
-
     # order_service.update_order(id_, input_order, user_id_from_jwt)
 
 
@@ -96,5 +95,4 @@ def delete_order(
     id: int, authorization: Annotated[str | None, Header()] = None
 ):
     authorizer.authorize_if_user_has_one_of_roles(['admin'], authorization)
-
     # Only admin user can delete an order
