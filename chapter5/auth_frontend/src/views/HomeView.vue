@@ -9,7 +9,7 @@ import tryMakeHttpRequest from "@/tryMakeHttpRequest";
 onMounted(async () => {
   try {
     const response = await tryMakeHttpRequest(
-      "http://localhost:8000/messaging-service/messages",
+      "http://localhost:8000/api/messaging-service/messages",
       {
         method: "POST",
       },

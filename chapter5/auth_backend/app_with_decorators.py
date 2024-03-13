@@ -1,66 +1,103 @@
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from ApiError import ApiError
 from InputOrder import InputOrder
+from auth_decorators import (
+    allow_any_user,
+    allow_authorized_user,
+    allow_for_self,
+    allow_for_user_roles,
+)
 from jwt_authorizer import authorizer
-from order_service import order_service
-# OrderUpdate is a DTO that should not have user_id attribute,
-# because it cannot be changed
-from OrderUpdate import OrderUpdate
 
 app = FastAPI()
 
-# Define a custom HTTPException handler that provides
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
+
+# Define a custom ApiError handler that provides
 # admin logging and metrics update
-@app.exception_handler(StarletteHTTPException)
+@app.exception_handler(ApiError)
 async def http_exception_handler(
     request: Request, error: StarletteHTTPException
 ):
     if error.status_code == 403:
         # Audit log an unauthorized request
+        pass
 
     # Increment 'HTTP request failures' counter by one
     # using the following metric labels: error.status_code, error.detail
 
-    return JSONResponse({'error: ': str(error.detail)}, status_code=error.status_code)
+    return JSONResponse(
+        {'error: ': str(error.detail)}, status_code=error.status_code
+    )
+
 
 @app.get('/sales-item-service/sales-items')
 @allow_any_user
-async def get_sales_items():
-    # ...
+def get_sales_items():
+    # No authentication/authorization required
+    # Send sales items
+    pass
+
 
 @app.post('/messaging-service/messages')
 @allow_authorized_user(authorizer)
-async def create_message(request: Request):
-    # ...
+def create_message(request: Request):
+    # Authenticated user can create a message
+    print('Message created')
+
 
 @app.get('/order-service/orders/{id}')
-@allow_for_user_own_resources_only(
-    authorizer,
-    order_service.get_order_by_id_and_user_id
-)
-async def get_order(id: int, request: Request):
-    # ...
+def get_order(id_: int, request: Request):
+    user_id_from_jwt = authorizer.getUserId(
+        request.headers.get('Authorization')
+    )
+
+    # Try to get order using 'user_id_from_jwt' as user id and 'id' as order id,
+    # e.g. order_service.get_order(id_, user_id_from_jwt)
+    # It is important to notice that when trying to retrieve
+    # the order from database, both 'id_' and 'user_id_from_jwt'
+    # are used as query filters
+    # If the user is not allowed to access the resource
+    # 404 Not Found is raised from the service method
+    # This approach has the security benefit of not revealing
+    # to an attacker whether an order with 'id_' exists or not
+
 
 @app.post('/order-service/orders')
-@allow_for_user_own_resources_only(authorizer)
-async def create_order(
-    order_dto: InputOrder, request: Request
-):
-    # ...
+@allow_for_self(authorizer)
+def create_order(input_order: InputOrder, request: Request):
+    authorizer.authorize_for_self(
+        input_order.userId, request.headers.get('Authorization')
+    )
+
+    # Create an order for the user.
+    # User cannot create orders for other users
+
 
 @app.put('/order-service/orders/{id}')
-@allow_for_user_own_resources_only(
-    authorizer,
-    order_service.get_order_by_id_and_user_id
-)
-async def update_order(
-    id: int, order: OrderUpdate, request: Request
-):
-    # ...
+def update_order(id_: int, input_order: InputOrder, request: Request):
+    user_id_from_jwt = authorizer.getUserId(
+        request.headers.get('Authorization')
+    )
+
+    # order_service.update_order(id_, input_order, user_id_from_jwt)
+
 
 @app.delete('/order-service/orders/{id}')
 @allow_for_user_roles(['admin'], authorizer)
-async def delete_order(id: int, request: Request):
-    # ...
+def delete_order(id: int, request: Request):
+    authorizer.authorize_if_user_has_one_of_roles(
+        ['admin'], request.headers.get('Authorization')
+    )
+
+    # Only admin user can delete an order

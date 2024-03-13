@@ -1,7 +1,7 @@
 import pkceChallenge from "pkce-challenge";
 import { jwtDecode } from "jwt-decode";
 import tryMakeHttpRequest from "@/tryMakeHttpRequest";
-import type {useAuthInfoStore} from "@/authInfoStore";
+import type { useAuthInfoStore } from "@/authInfoStore";
 
 /*interface AuthorizedUserInfo {
   readonly userName: string;
@@ -15,7 +15,7 @@ export default class AuthorizationService {
     private readonly oidcConfigurationEndpoint: string,
     private readonly clientId: string,
     private readonly authRedirectUrl: string,
-    private readonly loginPageUrl: string
+    private readonly loginPageUrl: string,
   ) {}
 
   // Try to authorize the user using the OpenID Connect
@@ -24,7 +24,7 @@ export default class AuthorizationService {
     // Store the redirect URI in service worker
     navigator.serviceWorker?.controller?.postMessage({
       key: "redirectUri",
-      value: this.authRedirectUrl
+      value: this.authRedirectUrl,
     });
 
     // Store the state secret in service worker
@@ -51,18 +51,20 @@ export default class AuthorizationService {
   // Try to get access, refresh and ID token from
   // the authorization server's token endpoint
   async tryGetTokens(
-    authInfoStore: ReturnType<typeof useAuthInfoStore>
+    authInfoStore: ReturnType<typeof useAuthInfoStore>,
   ): Promise<void> {
     const oidcConfiguration = await this.getOidcConfiguration();
 
-    const response =
-      await tryMakeHttpRequest(oidcConfiguration.token_endpoint, {
+    const response = await tryMakeHttpRequest(
+      oidcConfiguration.token_endpoint,
+      {
         method: "post",
         mode: "cors",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-    });
+      },
+    );
 
     const tokens = await response.json();
     this.storeTokens(tokens);
@@ -76,7 +78,7 @@ export default class AuthorizationService {
     // Clear authorized user info in service worker
     navigator.serviceWorker?.controller?.postMessage({
       key: "authorizedUserInfo",
-      value: undefined
+      value: undefined,
     });
 
     // Get ID token from service worker
@@ -96,15 +98,14 @@ export default class AuthorizationService {
   }
 
   private async getOidcConfiguration(): Promise<any> {
-    const response =
-      await tryMakeHttpRequest(this.oidcConfigurationEndpoint);
+    const response = await tryMakeHttpRequest(this.oidcConfigurationEndpoint);
 
     return response.json();
   }
 
   private async tryCreateAuthUrl(
     state: string,
-    challenge: Awaited<ReturnType<typeof pkceChallenge>>
+    challenge: Awaited<ReturnType<typeof pkceChallenge>>,
   ) {
     const oidcConfiguration = await this.getOidcConfiguration();
     let authUrl = oidcConfiguration.authorization_endpoint;
@@ -139,8 +140,8 @@ export default class AuthorizationService {
 
   private storeAuthorizedUserInfo(
     idToken: any,
-    authInfoStore: ReturnType<typeof useAuthInfoStore>
-    ) {
+    authInfoStore: ReturnType<typeof useAuthInfoStore>,
+  ) {
     const idTokenClaims: any = jwtDecode(idToken);
 
     const authorizedUserInfo = {
@@ -152,7 +153,7 @@ export default class AuthorizationService {
 
     navigator.serviceWorker?.controller?.postMessage({
       key: "authorizedUserInfo",
-      value: authorizedUserInfo
+      value: authorizedUserInfo,
     });
 
     authInfoStore.setFirstName(idTokenClaims.given_name);

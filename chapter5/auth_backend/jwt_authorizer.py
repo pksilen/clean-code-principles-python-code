@@ -60,6 +60,28 @@ class __JwtAuthorizer(Authorizer):
         if not user_is_authorized:
             raise self.UnauthorizedError()
 
+    def get_user_id(self, auth_header: str | None) -> str:
+        claims = self.__decode_jwt_claims(auth_header)
+
+        try:
+            sub_claim = claims['sub']
+
+            users_response = requests.get(
+                f'{self.__get_users_url}?sub={sub_claim}&fields=id'
+            )
+
+            users_response.raise_for_status()
+            # Response JSON is expected in the form [{ "id": 12345 }]
+            users = users_response.json()
+        except (KeyError, requests.RequestException) as error:
+            # Log error details
+            raise self.IamError()
+
+        try:
+            return users[0].id
+        except (IndexError, AttributeError):
+            raise self.UnauthorizedError()
+
     def __decode_jwt_claims(self, auth_header: str | None) -> dict[str, Any]:
         if not auth_header:
             raise self.UnauthenticatedError()
@@ -85,28 +107,6 @@ class __JwtAuthorizer(Authorizer):
             raise self.UnauthorizedError()
 
         return jwt_claims
-
-    def get_user_id(self, auth_header: str | None) -> str:
-        claims = self.__decode_jwt_claims(auth_header)
-
-        try:
-            sub_claim = claims['sub']
-
-            users_response = requests.get(
-                f'{self.__get_users_url}?sub={sub_claim}&fields=id'
-            )
-
-            users_response.raise_for_status()
-            # Response JSON is expected in the form [{ "id": 12345 }]
-            users = users_response.json()
-        except (KeyError, requests.RequestException) as error:
-            # Log error details
-            raise self.IamError()
-
-        try:
-            return users[0].id
-        except (IndexError, AttributeError):
-            raise self.UnauthorizedError()
 
 
 authorizer = __JwtAuthorizer()
