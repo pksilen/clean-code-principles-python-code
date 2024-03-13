@@ -40,20 +40,15 @@ def get_sales_items():
 
 
 @app.post('/api/messaging-service/messages')
-def create_message(
-    request: Request, authorization: Annotated[str | None, Header()] = None
-):
-    print(authorization)
+def create_message(authorization: Annotated[str | None, Header()] = None):
     authorizer.authorize(authorization)
     # Authenticated user can create a message
     print('Message created')
 
 
 @app.get('/api/order-service/orders/{id}')
-def get_order(id_: int, request: Request):
-    user_id_from_jwt = authorizer.getUserId(
-        request.headers.get('Authorization')
-    )
+def get_order(id_: int, authorization: Annotated[str | None, Header()] = None):
+    user_id_from_jwt = authorizer.getUserId(authorization)
 
     # Try to get order using 'user_id_from_jwt' as user id and 'id' as order id,
     # e.g. order_service.get_order(id_, user_id_from_jwt)
@@ -67,28 +62,30 @@ def get_order(id_: int, request: Request):
 
 
 @app.post('/api/order-service/orders')
-def create_order(input_order: InputOrder, request: Request):
-    authorizer.authorize_for_self(
-        input_order.userId, request.headers.get('Authorization')
-    )
+def create_order(
+    input_order: InputOrder,
+    authorization: Annotated[str | None, Header()] = None,
+):
+    authorizer.authorize_for_self(input_order.userId, authorization)
 
     # Create an order for the user.
     # User cannot create orders for other users
 
 
 @app.put('/api/order-service/orders/{id}')
-def update_order(id_: int, input_order: InputOrder, request: Request):
-    user_id_from_jwt = authorizer.getUserId(
-        request.headers.get('Authorization')
-    )
-
+def update_order(
+    id_: int,
+    input_order: InputOrder,
+    authorization: Annotated[str | None, Header()] = None,
+):
+    user_id_from_jwt = authorizer.getUserId(authorization)
     # order_service.update_order(id_, input_order, user_id_from_jwt)
 
 
 @app.delete('/api/order-service/orders/{id}')
-def delete_order(id: int, request: Request):
-    authorizer.authorize_if_user_has_one_of_roles(
-        ['admin'], request.headers.get('Authorization')
-    )
+def delete_order(
+    id: int, authorization: Annotated[str | None, Header()] = None
+):
+    authorizer.authorize_if_user_has_one_of_roles(['admin'], authorization)
 
     # Only admin user can delete an order

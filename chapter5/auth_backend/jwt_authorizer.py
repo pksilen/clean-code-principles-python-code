@@ -95,7 +95,11 @@ class __JwtAuthorizer(Authorizer):
 
             jwt = auth_header.split('Bearer ')[1]
             signing_key = self.__jwks_client.get_signing_key_from_jwt(jwt)
-            jwt_claims = decode(jwt, signing_key.key, algorithms=['RS256'])
+
+            # Keycloak sets aud claim in JWT to 'account' by default
+            jwt_claims = decode(
+                jwt, signing_key.key, audience='account', algorithms=['RS256']
+            )
         except (
             requests.RequestException,
             KeyError,
@@ -103,7 +107,8 @@ class __JwtAuthorizer(Authorizer):
         ) as error:
             # Log error details
             raise self.IamError()
-        except (IndexError, InvalidTokenError):
+        except (IndexError, InvalidTokenError) as error:
+            print(error)
             raise self.UnauthorizedError()
 
         return jwt_claims
