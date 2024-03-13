@@ -16,12 +16,10 @@ def allow_authorized_user(authorizer: Authorizer):
         @wraps(handle_request)
         async def wrapped_handle_request(*args, **kwargs):
             try:
-                authorizer.authorize(
-                    kwargs['request'].headers.get('Authorization')
-                )
+                authorizer.authorize(kwargs['authorization'])
             except KeyError:
                 raise AuthDecorException(
-                    "Request handler must accept 'request' parameter"
+                    "Request handler must accept 'authorization' parameter"
                 )
             return await handle_request(*args, **kwargs)
 
@@ -46,13 +44,11 @@ def allow_for_self(authorizer: Authorizer):
                         ][0]
                     ].userId
                 )
-                authorizer.authorize_for_self(
-                    user_id, kwargs['request'].headers.get('Authorization')
-                )
+                authorizer.authorize_for_self(user_id, kwargs['authorization'])
             except (AttributeError, IndexError, KeyError):
                 raise AuthDecorException(
                     """
-                    Request handler must accept 'request' parameter,
+                    Request handler must accept 'authorization' parameter,
                     'user_id' parameter or DTO parameter
                     with name starting with 'input'. DTO parameter
                     must have attribute 'userId'
@@ -71,11 +67,11 @@ def allow_for_user_roles(roles: list[str], authorizer: Authorizer):
         async def wrapped_handle_request(*args, **kwargs):
             try:
                 authorizer.authorize_if_user_has_one_of_roles(
-                    roles, kwargs['request'].headers.get('Authorization')
+                    roles, kwargs['authorization']
                 )
             except KeyError:
                 raise AuthDecorException(
-                    "Request handler must accept 'request' parameter"
+                    "Request handler must accept 'authorization' parameter"
                 )
             return await handle_request(*args, **kwargs)
 
