@@ -4,7 +4,7 @@
 
 <script setup>
 import { onMounted } from "vue";
-import tryMakeHttpRequest from "@/tryMakeHttpRequest.js";
+import tryMakeHttpRequest from "@/tryMakeHttpRequest";
 
 onMounted(async () => {
   try {

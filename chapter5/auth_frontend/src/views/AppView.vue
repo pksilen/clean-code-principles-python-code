@@ -5,7 +5,7 @@
 
 <script setup>
 import { onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import authorizationService from "@/authService";
 import { useAuthInfoStore } from "@/authInfoStore";
 import HeaderView from "@/views/HeaderView.vue";
@@ -22,10 +22,10 @@ onMounted(async () => {
     const { setFirstName } = useAuthInfoStore();
     setFirstName(authorizedUserInfo.firstName);
     router.push({ name: "home" });
-  } else if (route.path !== '/auth') {
+  } else if (route.path !== "/auth") {
     authorizationService
       .tryAuthorize()
-      .catch(() =>  router.push({ name: "auth-error" }));
+      .catch(() => router.push({ name: "auth-error" }));
   }
 });
 </script>
