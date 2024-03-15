@@ -1,13 +1,14 @@
 from dependency_injector.wiring import Provide
 
-from dtos.InputRentalCarReservation import InputRentalCarReservation
-from dtos.InputTrip import InputTrip
-from dtos.OutputRentalCarReservation import OutputRentalCarReservation
-from dtos.OutputTrip import OutputTrip
-from entities.Trip import Trip
-from errors.EntityNotFoundError import EntityNotFoundError
-from repositories.TripRepository import TripRepository
-from usecases.TripBookingUseCases import TripBookingUseCases
+from model.dtos.InputRentalCarReservation import InputRentalCarReservation
+from model.dtos.InputTrip import InputTrip
+from model.dtos.OutputRentalCarReservation import OutputRentalCarReservation
+from model.dtos.OutputTrip import OutputTrip
+from model.entities.RentalCarReservation import RentalCarReservation
+from model.entities.Trip import Trip
+from model.errors.EntityNotFoundError import EntityNotFoundError
+from model.repositories.TripRepository import TripRepository
+from model.usecases.TripBookingUseCases import TripBookingUseCases
 
 
 class TripBookingUseCasesImpl(TripBookingUseCases):

@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from errors.TripBookingServiceError import TripBookingServiceError
+from model.errors.TripBookingServiceError import TripBookingServiceError
 
 
 class Reservation(Protocol):

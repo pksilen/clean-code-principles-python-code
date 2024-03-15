@@ -1,7 +1,7 @@
 from dependency_injector.wiring import Provide
 
-from entities.AbstractReservation import AbstractReservation
-from services.reservation.hotel.HotelReservationService import \
+from model.entities.AbstractReservation import AbstractReservation
+from model.services.reservation.HotelReservationService import \
     HotelReservationService
 
 

@@ -1,16 +1,16 @@
 from dependency_injector import containers, providers
 
-from repositories.MongoDbTripRepository import MongoDbTripRepository
-from services.reservation.flight.GalileoFlightReservationService import (
-    GalileoFlightReservationService,
-)
-from services.reservation.hotel.AmadeusHotelReservationService import (
+from ifadapters.repositories.MongoDbTripRepository import MongoDbTripRepository
+from ifadapters.services.reservation.AmadeusHotelReservationService import (
     AmadeusHotelReservationService,
 )
-from services.reservation.rentalcar.HertzRentalCarReservationService import (
+from ifadapters.services.reservation.GalileoFlightReservationService import (
+    GalileoFlightReservationService,
+)
+from ifadapters.services.reservation.HertzRentalCarReservationService import (
     HertzRentalCarReservationService,
 )
-from usecases.TripBookingUsesCasesImpl import TripBookingUseCasesImpl
+from model.usecases.TripBookingUsesCasesImpl import TripBookingUseCasesImpl
 
 
 class DiContainer(containers.DeclarativeContainer):

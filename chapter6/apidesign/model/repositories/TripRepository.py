@@ -1,7 +1,7 @@
 from typing import Protocol
 
-from entities.Trip import Trip
-from errors.TripBookingServiceError import TripBookingServiceError
+from model.entities.Trip import Trip
+from model.errors.TripBookingServiceError import TripBookingServiceError
 
 
 class TripRepository(Protocol):

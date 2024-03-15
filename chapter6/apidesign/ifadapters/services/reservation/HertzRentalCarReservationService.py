@@ -1,4 +1,4 @@
-from services.reservation.rentalcar.RentalCarReservationService import \
+from model.services.reservation.RentalCarReservationService import \
     RentalCarReservationService
 
 

@@ -1,4 +1,5 @@
-from services.reservation.hotel.HotelReservationService import HotelReservationService
+from model.services.reservation.HotelReservationService import \
+    HotelReservationService
 
 
 class AmadeusHotelReservationService(HotelReservationService):

@@ -1,11 +1,11 @@
 from dependency_injector.wiring import Provide
 from fastapi import APIRouter
 
-from dtos.InputRentalCarReservation import InputRentalCarReservation
-from dtos.InputTrip import InputTrip
-from dtos.OutputRentalCarReservation import OutputRentalCarReservation
-from dtos.OutputTrip import OutputTrip
-from usecases.TripBookingUseCases import TripBookingUseCases
+from model.dtos.InputRentalCarReservation import InputRentalCarReservation
+from model.dtos.InputTrip import InputTrip
+from model.dtos.OutputRentalCarReservation import OutputRentalCarReservation
+from model.dtos.OutputTrip import OutputTrip
+from model.usecases.TripBookingUseCases import TripBookingUseCases
 
 
 class RestTripController:

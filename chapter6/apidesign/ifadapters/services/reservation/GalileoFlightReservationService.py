@@ -1,4 +1,5 @@
-from services.reservation.flight.FlightReservationService import FlightReservationService
+from model.services.reservation.FlightReservationService import \
+    FlightReservationService
 
 
 class GalileoFlightReservationService(FlightReservationService):

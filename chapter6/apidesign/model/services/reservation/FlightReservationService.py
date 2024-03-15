@@ -1,5 +1,5 @@
-from errors.TripBookingServiceError import TripBookingServiceError
-from services.reservation.ReservationService import ReservationService
+from model.errors.TripBookingServiceError import TripBookingServiceError
+from model.services.reservation.ReservationService import ReservationService
 
 
 class FlightReservationService(ReservationService):

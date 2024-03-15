@@ -1,9 +1,9 @@
 from typing import Protocol
 
-from dtos.InputRentalCarReservation import InputRentalCarReservation
-from dtos.InputTrip import InputTrip
-from dtos.OutputRentalCarReservation import OutputRentalCarReservation
-from dtos.OutputTrip import OutputTrip
+from model.dtos.InputRentalCarReservation import InputRentalCarReservation
+from model.dtos.InputTrip import InputTrip
+from model.dtos.OutputRentalCarReservation import OutputRentalCarReservation
+from model.dtos.OutputTrip import OutputTrip
 
 
 class TripBookingUseCases(Protocol):

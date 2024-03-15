@@ -1,8 +1,8 @@
-from dtos.InputTrip import InputTrip
-from entities.FlightReservation import FlightReservation
-from entities.HotelReservation import HotelReservation
-from entities.RentalCarReservation import RentalCarReservation
-from entities.Reservation import Reservation
+from model.dtos.InputTrip import InputTrip
+from model.entities.FlightReservation import FlightReservation
+from model.entities.HotelReservation import HotelReservation
+from model.entities.RentalCarReservation import RentalCarReservation
+from model.entities.Reservation import Reservation
 
 
 class Trip:

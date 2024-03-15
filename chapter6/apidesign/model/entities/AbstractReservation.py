@@ -1,5 +1,5 @@
-from entities.Reservation import Reservation
-from services.reservation.ReservationService import ReservationService
+from model.entities.Reservation import Reservation
+from model.services.reservation.ReservationService import ReservationService
 
 
 class AbstractReservation(Reservation):

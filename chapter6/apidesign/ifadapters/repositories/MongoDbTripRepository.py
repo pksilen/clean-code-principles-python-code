@@ -1,5 +1,5 @@
-from entities.Trip import Trip
-from repositories.TripRepository import TripRepository
+from model.entities.Trip import Trip
+from model.repositories.TripRepository import TripRepository
 
 
 class MongoDbTripRepository(TripRepository):
