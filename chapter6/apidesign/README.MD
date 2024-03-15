@@ -1,4 +1,7 @@
-# APi Design Example
+# API Design Example
+
+***Note!*** This is not a fully working example, but
+a collection of source code files
 
 ## Prerequisites
 
@@ -10,3 +13,4 @@
 python -m venv venv
 source venv/bin/activate
 ```
+
