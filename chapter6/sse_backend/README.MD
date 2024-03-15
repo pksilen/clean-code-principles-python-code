@@ -1,4 +1,4 @@
-# Order Service
+# SSE Backend
 
 ## Prerequisites
 

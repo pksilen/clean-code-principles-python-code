@@ -1,0 +1,2 @@
+class TripBookingServiceError(Exception):
+    pass

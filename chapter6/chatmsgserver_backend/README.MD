@@ -1,4 +1,4 @@
-# Order Service
+# Chat Messaging Server
 
 ## Prerequisites
 

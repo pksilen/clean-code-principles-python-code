@@ -11,15 +11,15 @@ def create_error_dict(
     error: Exception,
     status_code: int,
     error_code: str,
-    requestOrStr: Any,
+    request_or_string: Any,
 ) -> dict[str, Any]:
     error_message = ' '.join(
         [word.lower() for word in re.findall('[A-Z][^A-Z]*', error_code)]
     )
-    if isinstance(requestOrStr, str):
-        endpoint = requestOrStr
+    if isinstance(request_or_string, str):
+        endpoint = request_or_string
     else:
-        endpoint = f'{requestOrStr.method} {requestOrStr.url}'
+        endpoint = f'{request_or_string.method} {request_or_string.url}'
 
     return {
         'statusCode': 400,
