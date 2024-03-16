@@ -57,7 +57,11 @@ class MongoDbSalesItemRepository(SalesItemRepository):
         try:
             self.__sales_items.update_one(
                 {'_id': sales_item.id},
-                {'$set': self.__to_update_dict(sales_item)},
+                {
+                    '$set': self.__to_dict_without(
+                        sales_item, ['_id', 'createdAtTimestampInMs']
+                    )
+                },
             )
         except (BSONError, PyMongoError) as error:
             raise DatabaseError(error)
@@ -86,11 +90,11 @@ class MongoDbSalesItemRepository(SalesItemRepository):
         }
 
     @staticmethod
-    def __to_update_dict(sales_item: SalesItem) -> dict[str, Any]:
-        update_dict = MongoDbSalesItemRepository.__to_dict(sales_item)
-        del update_dict['_id']
-        del update_dict['createdAtTimestampInMs']
-        return update_dict
+    def __to_dict_without(
+        sales_item: SalesItem, keys: list[str]
+    ) -> dict[str, Any]:
+        dict_ = MongoDbSalesItemRepository.__to_dict(sales_item)
+        return {key: value for key, value in dict_.items() if key not in keys}
 
     @staticmethod
     def __to_domain_entity(sales_item_dict: dict[str, Any]) -> SalesItem:
