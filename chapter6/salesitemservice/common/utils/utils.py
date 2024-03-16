@@ -16,6 +16,7 @@ def create_error_dict(
     error_message = ' '.join(
         [word.lower() for word in re.findall('[A-Z][^A-Z]*', error_code)]
     )
+
     if isinstance(request_or_string, str):
         endpoint = request_or_string
     else:
