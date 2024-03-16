@@ -8,7 +8,7 @@ from ..services.OrderService import OrderService
 from ..services.ShoppingCartService import ShoppingCartService
 
 
-class OrderServiceImpl(OrderService):
+class ShoppingCartOrderServiceImpl(OrderService):
     __order_repository: OrderRepository = Provide['order_repository']
     __shopping_cart_service: ShoppingCartService = Provide[
         'shopping_cart_service'
