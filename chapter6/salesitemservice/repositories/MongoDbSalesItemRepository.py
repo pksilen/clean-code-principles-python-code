@@ -59,7 +59,7 @@ class MongoDbSalesItemRepository(SalesItemRepository):
                 {'_id': sales_item.id},
                 {
                     '$set': self.__to_dict_without(
-                        sales_item, ['_id', 'createdAtTimestampInMs']
+                        sales_item, {'_id', 'createdAtTimestampInMs'}
                     )
                 },
             )
@@ -91,7 +91,7 @@ class MongoDbSalesItemRepository(SalesItemRepository):
 
     @staticmethod
     def __to_dict_without(
-        sales_item: SalesItem, keys: list[str]
+        sales_item: SalesItem, keys: set[str]
     ) -> dict[str, Any]:
         dict_ = MongoDbSalesItemRepository.__to_dict(sales_item)
         return {key: value for key, value in dict_.items() if key not in keys}
