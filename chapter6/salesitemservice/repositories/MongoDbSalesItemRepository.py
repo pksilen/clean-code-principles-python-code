@@ -57,20 +57,7 @@ class MongoDbSalesItemRepository(SalesItemRepository):
         try:
             self.__sales_items.update_one(
                 {'_id': sales_item.id},
-                {
-                    '$set': {
-                        'name': sales_item.name,
-                        'priceInCents': sales_item.priceInCents,
-                        'images': [
-                            {
-                                'id': image.id,
-                                'rank': image.rank,
-                                'url': image.url,
-                            }
-                            for image in sales_item.images
-                        ],
-                    }
-                },
+                {'$set': self.__to_update_dict(sales_item)},
             )
         except (BSONError, PyMongoError) as error:
             raise DatabaseError(error)
@@ -97,6 +84,13 @@ class MongoDbSalesItemRepository(SalesItemRepository):
                 for image in sales_item.images
             ],
         }
+
+    @staticmethod
+    def __to_update_dict(sales_item: SalesItem) -> dict[str, Any]:
+        update_dict = MongoDbSalesItemRepository.__to_dict(sales_item)
+        del update_dict['_id']
+        del update_dict['createdAtTimestampInMs']
+        return update_dict
 
     @staticmethod
     def __to_domain_entity(sales_item_dict: dict[str, Any]) -> SalesItem:
