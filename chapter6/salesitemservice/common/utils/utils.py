@@ -23,7 +23,7 @@ def create_error_dict(
         endpoint = f'{request_or_string.method} {request_or_string.url}'
 
     return {
-        'statusCode': 400,
+        'statusCode': status_code,
         'statusText': status_code_to_text[status_code],
         'endpoint': endpoint,
         'timestamp': datetime.now().isoformat(),
