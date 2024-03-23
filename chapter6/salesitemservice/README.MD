@@ -43,8 +43,8 @@ export CONTROLLER_TYPE=rest
 export CONTROLLER_TYPE=graphql
 
 # Choose one of the below commands depending whether you want to use MySQL or MongoDB
-export DATABASE_URL=mongodb://localhost:27017/salesitemservice
 export DATABASE_URL=mysql+pymysql://root:password@localhost:3306/salesitemservice
+export DATABASE_URL=mongodb://localhost:27017/salesitemservice
 
 # If you are using MySQL, choose one of the below commands depending whether 
 # you want to use ORM or parameterized SQL
