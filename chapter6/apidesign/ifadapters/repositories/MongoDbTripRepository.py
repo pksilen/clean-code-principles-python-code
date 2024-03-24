@@ -6,7 +6,7 @@ class MongoDbTripRepository(TripRepository):
     def save(self, trip: Trip) -> None:
         # ...
 
-    def find(self, id_: str) -> Trip:
+    def find(self, id_: str) -> Trip | None:
         # ...
 
     def update(self, trip: Trip) -> None:
