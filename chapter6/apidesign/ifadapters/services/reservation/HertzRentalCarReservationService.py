@@ -3,7 +3,7 @@ from model.services.reservation.RentalCarReservationService import \
 
 
 class HertzRentalCarReservationService(RentalCarReservationService):
-    def reserve_car(self, ...) -> None:
+    def reserve_car(self, ...) -> str:
         # ...
 
     def cancel_reservation(self, id_: str) -> None:

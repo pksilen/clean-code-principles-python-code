@@ -11,5 +11,8 @@ class TripRepository(Protocol):
     def save(self, trip: Trip) -> None:
         pass
 
+    def find(self, id_: str) -> Trip:
+        pass
+
     def update(self, trip: Trip) -> None:
         pass

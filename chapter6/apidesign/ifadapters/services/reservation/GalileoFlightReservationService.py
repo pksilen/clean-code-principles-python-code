@@ -3,7 +3,7 @@ from model.services.reservation.FlightReservationService import \
 
 
 class GalileoFlightReservationService(FlightReservationService):
-    def reserve_flight(self, ...) -> None:
+    def reserve_flight(self, ...) -> str:
         # ...
 
     def cancel_reservation(self, id_: str) -> None:

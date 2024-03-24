@@ -9,8 +9,7 @@ class HotelReservation(AbstractReservation):
     __hotel_reservation_service: HotelReservationService = Provide['hotel_reservation_service']
 
     def __init__(self, ...):
-        super().__init__(...)
-        # Set hotel reservation related attributes ...
+        super().__init__()
 
     def make(self) -> None:
         self._assert_is_not_reserved()

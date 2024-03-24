@@ -9,8 +9,7 @@ class FlightReservation(AbstractReservation):
     __flight_reservation_service: FlightReservationService = Provide['flight_reservation_service']
 
     def __init__(self, ...):
-        super().__init__(...)
-        # Set flight reservation related attributes ...
+        super().__init__()
 
     def make(self) -> None:
         self._assert_is_not_reserved()

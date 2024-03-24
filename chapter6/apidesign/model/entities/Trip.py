@@ -52,6 +52,9 @@ class Trip:
         self.__reservations.append(reservation)
 
     def remove(self, reservation: Reservation) -> None:
+        # In production code, this loop cannot be forever but should be
+        # replaced with more robust and complex error handling as described
+        # earlier in first chapter when discussing distributed transactions
         while True:
             try:
                 reservation.cancel()

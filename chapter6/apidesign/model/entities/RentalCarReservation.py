@@ -12,8 +12,7 @@ class RentalCarReservation(AbstractReservation):
     ]
 
     def __init__(self, ...):
-        super().__init__(...)
-        # Set rental car reservation related attributes ...
+        super().__init__()
 
     @staticmethod
     def create_from(

@@ -6,5 +6,5 @@ class FlightReservationService(ReservationService):
     class ReserveFlightError(TripBookingServiceError):
         pass
 
-    def reserve_flight(self, ...) -> None:
+    def reserve_flight(self, ...) -> str:
         pass

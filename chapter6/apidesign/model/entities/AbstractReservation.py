@@ -3,7 +3,7 @@ from model.services.reservation.ReservationService import ReservationService
 
 
 class AbstractReservation(Reservation):
-    def __init__(self, id_: str):
+    def __init__(self, id_: str | None = None):
         self.__id = id_
 
     @property
@@ -15,11 +15,15 @@ class AbstractReservation(Reservation):
         self.__id = id_
 
     def _assert_is_not_reserved(self) -> None:
-        if self.__id is not None:
+        is_reserved = self.__id is not None
+
+        if is_reserved:
             raise self.AlreadyReservedError()
 
     def _cancel_using(self, reservation_service: ReservationService) -> None:
-        if self.__id is None:
+        is_not_reserved = self.__id is None
+
+        if is_not_reserved:
             return
 
         try:
