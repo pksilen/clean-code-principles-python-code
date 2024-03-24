@@ -6,6 +6,9 @@ from .controllers.graphql.StrawberryGraphQlSalesItemController import (
     StrawberryGraphQlSalesItemController,
 )
 from .controllers.rest.RestSalesItemController import RestSalesItemController
+from .controllers.websocket.WebSocketSalesItemController import (
+    WebSocketSalesItemController,
+)
 from .repositories.MongoDbSalesItemRepository import MongoDbSalesItemRepository
 from .repositories.ParamSqlSalesItemRepository import (
     ParamSqlSalesItemRepository,
@@ -22,6 +25,7 @@ class DiContainer(containers.DeclarativeContainer):
             '.controllers.graphql.AriadneGraphQlSalesItemController',
             '.controllers.graphql.StrawberryGraphQlSalesItemController',
             '.controllers.grpc.GrpcSalesItemController',
+            '.controllers.websocket.WebSocketSalesItemController',
             '.repositories.orm.OrmSalesItemRepository',
             '.repositories.ParamSqlSalesItemRepository',
             '.repositories.MongoDbSalesItemRepository',
@@ -45,3 +49,7 @@ class DiContainer(containers.DeclarativeContainer):
         order_controller = providers.Singleton(
             StrawberryGraphQlSalesItemController
         )
+
+    websocket_order_controller = providers.Singleton(
+        WebSocketSalesItemController
+    )

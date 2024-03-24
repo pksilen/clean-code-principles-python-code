@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, WebSocket
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
@@ -67,3 +67,9 @@ def handle_unspecified_error(request: Request, error: Exception):
 
 order_controller = di_container.order_controller()
 app.include_router(order_controller.router)
+websocket_order_controller = di_container.websocket_order_controller()
+
+
+@app.websocket('/websocket')
+async def handle_websocket(websocket: WebSocket):
+    await websocket_order_controller.handle(websocket)
