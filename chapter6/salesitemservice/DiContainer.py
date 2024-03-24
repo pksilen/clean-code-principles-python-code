@@ -44,12 +44,12 @@ class DiContainer(containers.DeclarativeContainer):
         )
 
     if os.environ['CONTROLLER_TYPE'] == 'rest':
-        order_controller = providers.Singleton(RestSalesItemController)
+        sales_item_controller = providers.Singleton(RestSalesItemController)
     elif os.environ['CONTROLLER_TYPE'] == 'graphql':
-        order_controller = providers.Singleton(
+        sales_item_controller = providers.Singleton(
             StrawberryGraphQlSalesItemController
         )
 
-    websocket_order_controller = providers.Singleton(
+    websocket_sales_item_controller = providers.Singleton(
         WebSocketSalesItemController
     )

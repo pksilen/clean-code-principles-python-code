@@ -65,11 +65,14 @@ def handle_unspecified_error(request: Request, error: Exception):
     )
 
 
-order_controller = di_container.order_controller()
-app.include_router(order_controller.router)
-websocket_order_controller = di_container.websocket_order_controller()
+sales_item_controller = di_container.sales_item_controller()
+app.include_router(sales_item_controller.router)
+
+websocket_sales_item_controller = (
+    di_container.websocket_sales_item_controller()
+)
 
 
 @app.websocket('/websocket')
 async def handle_websocket(websocket: WebSocket):
-    await websocket_order_controller.handle(websocket)
+    await websocket_sales_item_controller.handle(websocket)
