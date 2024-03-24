@@ -2,7 +2,7 @@ from typing import Any
 
 from dependency_injector.wiring import Provide
 from fastapi import WebSocket, WebSocketDisconnect
-from fastapi.exceptions import RequestValidationError
+from pydantic import ValidationError
 
 from ...dtos.InputSalesItem import InputSalesItem
 from ...errors.ApiError import ApiError
@@ -28,17 +28,17 @@ class WebSocketSalesItemController:
             while True:
                 rpc_dict = await websocket.receive_json()
 
-                handle_request = self.__procedure_to_call_procedure[
+                call_procedure = self.__procedure_to_call_procedure[
                     rpc_dict['procedure']
                 ]
 
                 argument = rpc_dict.get('argument')
-                response = handle_request(argument)
-                print(response)
-                await websocket.send_json(response)
+                response_dict = call_procedure(argument)
+                print(response_dict)
+                await websocket.send_json(response_dict)
         except WebSocketDisconnect:
             await websocket.close()
-        except (KeyError, RequestValidationError):
+        except (KeyError, ValidationError) as error:
             pass
             # Handle request validation errors ...
         except ApiError as error:
