@@ -11,16 +11,22 @@ def create_error_dict(
     error: Exception,
     status_code: int,
     error_code: str,
-    request_or_string: Any,
+    request_or_endpoint_str: Any,
 ) -> dict[str, Any]:
     error_message = ' '.join(
         [word.lower() for word in re.findall('[A-Z][^A-Z]*', error_code)]
     )
 
-    if isinstance(request_or_string, str):
-        endpoint = request_or_string
+    if isinstance(request_or_endpoint_str, str):
+        endpoint = request_or_endpoint_str
+    elif hasattr(request_or_endpoint_str, 'method') and hasattr(
+        request_or_endpoint_str, 'url'
+    ):
+        endpoint = (
+            f'{request_or_endpoint_str.method} {request_or_endpoint_str.url}'
+        )
     else:
-        endpoint = f'{request_or_string.method} {request_or_string.url}'
+        endpoint = None
 
     return {
         'statusCode': status_code,

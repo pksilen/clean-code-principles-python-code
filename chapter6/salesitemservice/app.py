@@ -22,9 +22,14 @@ def handle_sales_item_service_error(
     # status_code=error.status_code
     # error_code=error.code
 
+    if hasattr(request, 'method') and hasattr(request, 'url'):
+        endpoint = f'{request.method} {request.url}'
+    else:
+        endpoint = None
+
     return JSONResponse(
         status_code=error.status_code,
-        content=error.to_dict(f'{request.method} {request.url}'),
+        content=error.to_dict(endpoint),
     )
 
 

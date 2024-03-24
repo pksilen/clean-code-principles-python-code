@@ -2,8 +2,10 @@ from typing import Any
 
 from dependency_injector.wiring import Provide
 from fastapi import WebSocket, WebSocketDisconnect
+from fastapi.exceptions import RequestValidationError
 
 from ...dtos.InputSalesItem import InputSalesItem
+from ...errors.ApiError import ApiError
 from ...service.SalesItemService import SalesItemService
 
 
@@ -36,9 +38,15 @@ class WebSocketSalesItemController:
                 await websocket.send_json(response)
         except WebSocketDisconnect:
             await websocket.close()
-        except Exception as exception:
-            print(exception)
-            # Handle error
+        except (KeyError, RequestValidationError):
+            pass
+            # Handle request validation errors ...
+        except ApiError as error:
+            endpoint = rpc_dict.get('procedure')
+            await websocket.send_json(error.to_dict(endpoint))
+        except Exception:
+            pass
+            # Handle unspecified internal errors ...
 
     def __create_sales_item(self, input_sales_item) -> dict[str, Any]:
         input_sales_item = InputSalesItem.model_validate(input_sales_item)
