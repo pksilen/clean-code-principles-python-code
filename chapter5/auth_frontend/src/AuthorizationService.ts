@@ -3,13 +3,6 @@ import { jwtDecode } from "jwt-decode";
 import tryMakeHttpRequest from "@/tryMakeHttpRequest";
 import type { useAuthInfoStore } from "@/authInfoStore";
 
-/*interface AuthorizedUserInfo {
-  readonly userName: string;
-  readonly firstName: string;
-  readonly lastName: string;
-  readonly email: string;
-}*/
-
 export default class AuthorizationService {
   constructor(
     private readonly oidcConfigurationEndpoint: string,
